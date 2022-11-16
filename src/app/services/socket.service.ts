@@ -232,7 +232,8 @@ export class Socket {
         this.apiSocket.send(
             JSON.stringify({
                 eventName: `chat-typing`,
-                user: userId
+                user: userId,
+                isTyping: true
             })
         )
     }

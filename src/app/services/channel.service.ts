@@ -267,7 +267,7 @@ export class ChannelService {
     async getChannelsByUserId({ userId, searchQuery = null, skip = 0, limit = 50 }): Promise<any> {
         return this.http
             .get(`${environment.apiUrl}/channels/user`, {
-                params: { searchQuery, skip, limit }, headers:{userId}
+                params: { userId,searchQuery, skip, limit }
             })
             .toPromise()
     }

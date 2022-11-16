@@ -59,6 +59,7 @@ export class ProfileComponent implements OnInit {
             await this.channelService.getTechList()
             this.data = this.channelService.techList
             this.otherUser = await this.userService.getUserByCustomUsername(customUsername)
+            console.log("other user")
             console.log(this.otherUser)
             if (this.otherUser) {
                 this.isCurrentUser = this.otherUser._id == this.authService.currentUser._id
@@ -96,6 +97,7 @@ export class ProfileComponent implements OnInit {
         if (isRefresh) {
             this.resetSkipLimit()
         }
+        console.log("this user's channels")
         const channels = await this.channelService.getChannelsByUserId({
             userId: this.otherUser._id,
             searchQuery: this.searchQuery,
