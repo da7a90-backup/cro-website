@@ -3243,8 +3243,8 @@ mat-ink-bar.mat-ink-bar {
 
 /* ADD NEW CHANNEL FORM CSS END */
 .mat-raised-button {
-    padding: 12px 50px;
-    font-size: 18px;
+    padding: 12px 50px !important;
+    font-size: 18px !important;
 }
 
 .app-contact-left {
@@ -3359,16 +3359,8 @@ mat-ink-bar.mat-ink-bar {
     background: url(/assets/images/twitter.svg);
 }
 
-.social-icons .linkedin {
-    background: url(/assets/images/linkedin.svg);
-}
-
 .social-icons .discord {
     background: url(/assets/images/discord.svg);
-}
-
-.social-icons .producthunt {
-    background: url(/assets/images/producthunt.svg);
 }
 
 .social-icons .github {
@@ -3377,6 +3369,10 @@ mat-ink-bar.mat-ink-bar {
 
 .social-icons .magiceden {
     background: url(/assets/images/magiceden.png);
+}
+
+.social-icons .dexlab {
+    background: url(/assets/images/dexlab.svg);
 }
 
 .channel-icon {

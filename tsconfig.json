@@ -32,9 +32,6 @@
             ],
             "core-js/es6/*": [
                 "../node_modules/core-js/es/*"
-            ],
-            "crypto": [
-                "../node_modules/crypto-js"
             ]
         }
     },
@@ -45,7 +42,6 @@
         "strictInjectionParameters": true,
         "strictDomEventTypes": false,
         "types": [
-            "jasmine",
             "node"
         ]
     }

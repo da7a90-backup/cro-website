@@ -1,6 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-// import { SwPush } from '@angular/service-worker';
 // import { environment } from '../../../../environments/environment';
 import { UserService } from '../../../services/user.service'
 import { SfxService, SoundEffect } from '../../../services/sfx.service'
@@ -32,7 +31,6 @@ export class UserSettingsComponent implements AfterViewInit {
         private formbuilder: FormBuilder,
         private userService: UserService,
         private fb: FormBuilder,
-        // private swPush: SwPush,
         private sfxService: SfxService,
         private authService: AuthService
     ) {
@@ -83,23 +81,23 @@ export class UserSettingsComponent implements AfterViewInit {
     // }
 
     async onChangeDoNotDisturb() {
-        await this.userService.updateIsDoNotDisturbEnabled(
-            this.notificationForm.value.isDoNotDisturbEnabled
-        )
+        await this.userService.updateUser({
+            isDoNotDisturbEnabled: this.notificationForm.value.isDoNotDisturbEnabled
+        })
         this.isDoNotDisturbEnabled = this.notificationForm.value.isDoNotDisturbEnabled
     }
 
     async onChangeMessageGuard() {
-        await this.userService.updateIsMessageGuardEnabled(
-            this.notificationForm.value.isMessageGuardEnabled
-        )
+        await this.userService.updateUser({
+            isMessageGuardEnabled: this.notificationForm.value.isMessageGuardEnabled
+        })
         this.isMessageGuardEnabled = this.notificationForm.value.isMessageGuardEnabled
     }
 
     async saveEmail() {
         if (this.settingsForm.valid) {
             this.email = this.settingsForm.value.email
-            await this.userService.updateEmail(this.email)
+            await this.userService.updateUser({ email: this.email })
             this.userService.showSnackBar('Email saved', 3000)
             // if (!this.settingsForm.value.email) {
             //   this.notificationForm.value.isEmailNotificationsEnabled = false

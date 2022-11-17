@@ -24,7 +24,6 @@ import { GroupchatService } from '../../../services/groupchat.service'
 import { FriendService } from '../../../services/friend.service'
 import { SharedService } from '../../../services/shared.service'
 import { environment } from '../../../../environments/environment'
-import { SwPush } from '@angular/service-worker'
 
 @Component({
     selector: 'app-friend-chat',
@@ -77,7 +76,6 @@ export class FriendChatComponent implements OnInit, AfterViewChecked, OnDestroy 
         public sharedService: SharedService,
         private router: Router,
         private snackBar: MatSnackBar,
-        private swPush: SwPush
     ) {}
 
     async ngOnInit() {
@@ -90,12 +88,12 @@ export class FriendChatComponent implements OnInit, AfterViewChecked, OnDestroy 
             this.chat = this.friendGroup
         }
 
-       /* this.channel = await this.channelService.getChannel({
-            channelId: this.chat.chat.channel || this
-        })*/
-     /*    this.isNotificationsEnabled =
-            this.user && this.channel?.notificationSubscribers?.includes(this.user._id)
-        this.isHost = this.user && this.user._id == this.channel.user */
+        /* this.channel = await this.channelService.getChannel({
+             channelId: this.chat.chat.channel || this
+         })*/
+        /*    this.isNotificationsEnabled =
+               this.user && this.channel?.notificationSubscribers?.includes(this.user._id)
+           this.isHost = this.user && this.user._id == this.channel.user */
 
         this.subscription = this.socket
             .listenToChatMessages()
@@ -125,7 +123,7 @@ export class FriendChatComponent implements OnInit, AfterViewChecked, OnDestroy 
                 }
             })
         if (this.chatService.initIncomingMessage)
-        this.socket.emitChatMessage({source1: this.chatService.initIncomingMessage.source1, source2: this.chatService.initIncomingMessage.source2, message: this.chatService.initIncomingMessage.message})
+            this.socket.emitChatMessage({ source1: this.chatService.initIncomingMessage.source1, source2: this.chatService.initIncomingMessage.source2, message: this.chatService.initIncomingMessage.message })
 
         this.socket.listenToChatTyping().subscribe((data) => {
             if (data.userData && this.user && data.source2 === this.user._id) {

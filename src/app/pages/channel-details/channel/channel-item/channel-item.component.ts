@@ -1,4 +1,4 @@
-import { PasswordDialogComponent } from '../password-dialog/password-dialog.component'
+import { WaitingRoomDialogComponent } from '../waiting-room-dialog/waiting-room-dialog.component'
 import { Component, OnInit, Input, ViewChild } from '@angular/core'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog'
 import { LoadingDialogComponent } from '../../../../controls/loading-dialog/loading-dialog.component'
@@ -40,7 +40,7 @@ export class ChannelItemComponent implements OnInit {
             this.isParticipantChannel =
                 this.user.channelIds && this.user.channelIds.includes(this.channel._id)
         // this.techStackUrls = this.channelService.techList.filter(item => this.channel.techStack.includes(item.item_text)).map(item => item.item_image)
-        this.channel.techStack.forEach((techName) => {
+        this.channel.techStack?.forEach((techName) => {
             const tech = this.channelService.techList.find((item) => item.item_text === techName)
             if (tech) this.techStackUrls.push(tech.item_image)
         })
@@ -52,7 +52,7 @@ export class ChannelItemComponent implements OnInit {
         }) // get updated channel data
         this.channel = channel
         if (channel) {
-            const isUserBlocked = await channel.blockedUsers.some(
+            const isUserBlocked = await channel.blockedUsers?.some(
                 (blockedUser) => blockedUser === this.user._id
             )
             if (!this.user.isAdmin && isUserBlocked) {
@@ -61,11 +61,11 @@ export class ChannelItemComponent implements OnInit {
                 })
             } else {
                 if (
-                    channel.password &&
+                    channel.isPrivate &&
                     channel.user != this.user._id &&
                     !channel?.notificationSubscribers?.includes(this.user._id)
                 ) {
-                    this.showPasswordDialog()
+                    this.showWaitingRoomDialog()
                 } else {
                     this.showLoadingDialog()
                     this.router.navigate(['/channel', channel._id])
@@ -79,8 +79,8 @@ export class ChannelItemComponent implements OnInit {
         }
     }
 
-    showPasswordDialog() {
-        this.dialog.open(PasswordDialogComponent, {
+    showWaitingRoomDialog() {
+        this.dialog.open(WaitingRoomDialogComponent, {
             width: '400px',
             data: {
                 channel: this.channel

@@ -49,3 +49,7 @@ Thumbs.db
 *.wmv
 
 *.angular
+*.vscode
+/test-results/
+/playwright-report/
+/playwright/.cache/
