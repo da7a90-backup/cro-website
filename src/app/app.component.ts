@@ -103,7 +103,7 @@ export class AppComponent implements OnInit {
             console.log(e)
             this.error = true
         }
-        this.themeService.setTheme(this.tokenStorage.getTheme() || 'theme-dark')
+        this.themeService.setTheme(this.authService.currentUser.theme || 'theme-dark')
     }
 
     private async onInitsubMethod() {

@@ -27,7 +27,6 @@ export class ThemeService {
     constructor(
         private http: HttpClient,
         private styleManager: StyleManagerService,
-        private tokenStorage: TokenStorage,
         public authService: AuthService,
         public userService: UserService,
         private router: Router,
@@ -40,15 +39,15 @@ export class ThemeService {
     }
 
     setTheme(themeToSet) {
-        this.tokenStorage.saveTheme(themeToSet)
+        this.userService.updateUser({ theme: themeToSet })
         this.styleManager.setStyle('theme', `assets/styles/${themeToSet}.css`)
         this.updateAnimation()
     }
 
     async isDarkTheme() {
         try {
-            return this.tokenStorage.getTheme() === 'theme-dark'
-        } catch (e) {
+            return this.authService.currentUser.theme === 'theme-dark'
+        } catch (err) {
             return false
         }
     }
@@ -76,7 +75,7 @@ export class ThemeService {
             } else {
                 await this.authService.logout()
             }
-        } catch (e) {
+        } catch (err) {
             await this.authService.logout()
         }
     }
