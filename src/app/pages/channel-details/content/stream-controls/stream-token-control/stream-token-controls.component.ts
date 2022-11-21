@@ -1,7 +1,9 @@
+import { AuthService } from './../../../../../auth/auth.service';
 import { ChannelService } from '../../../../../services/channel.service'
 import { UserService } from '../../../../../services/user.service'
 import { Component } from '@angular/core'
 import { environment } from '../../../../../../environments/environment'
+import { TransactionService } from '../../../../../services/transaction.service'
 import { MatDialogRef } from '@angular/material/dialog'
 import { StreamingService } from '../../../../../services/streaming.service'
 import * as spl_token from '@solana/spl-token'
@@ -29,8 +31,13 @@ export class TokenControlsComponent {
         public channelService: ChannelService,
         public streamingService: StreamingService,
         public userService: UserService,
-        public dialogService: DialogService
-    ) {}
+        public authService: AuthService,
+        public dialogService: DialogService,
+        private transactionService: TransactionService,
+    ) {
+        
+
+    }
 
     async ngOnDestroy() {
         this.dialogRef.close()
@@ -43,7 +50,14 @@ export class TokenControlsComponent {
 
     async transferTokens() {
         try {
+            const channelId=this.channelService.currentChannel._id
+            const senderId=this.authService.currentUser._id
+            const senderName=this.authService.currentUser.displayName
             let amount: any = document.getElementById('amount')
+            const userId=this.channelService.currentChannel.user
+            const receiverUserName=this.channelService.currentChannel.createdBy
+            var destination: any
+            const secondDestination = environment.serviceFeeWallet
             amount = parseInt(amount?.value)
             const wallet: any = window
             const provider: any = await wallet?.solana
@@ -51,15 +65,13 @@ export class TokenControlsComponent {
             const pubKey = provider.publicKey.toString()
             const network = 'https://api.devnet.solana.com'
             const connection = new Connection(network)
-            console.log('p ', provider)
-            const secondDestination = environment.serviceFeeWallet
             console.log('secondDestination ', secondDestination)
-            var destination: any
             await this.userService
-                .getUserById(this.channelService.currentChannel.user)
+                .getUserById(userId)
                 .then((res) => {
-                    destination = res?.walletAddress
-                    // destination = "EH452r2neFEJS4yCNKBSGZjL3LDq6zy67AEUqcWQuBHZ"
+                    // console.log(this.channelService.currentChannel.user,"user ",res)
+                    // destination = res?.walletAddress
+                    destination = "EH452r2neFEJS4yCNKBSGZjL3LDq6zy67AEUqcWQuBHZ"
                     console.log('destination', destination)
                 })
             const mintPublicKey = new PublicKey(TOKEN_PROGRAM_ID)
@@ -144,9 +156,8 @@ export class TokenControlsComponent {
             let signature = await provider.signAndSendTransaction(transaction)
 
             console.log('signed ', signature)
-            // await connection.confirmTransaction(signature)
-            // alert('Transaction Signature : ' + signature?.signature)
-
+           
+    this.transactionService.createTransaction(signature?.signature,"tip",amount,userId,receiverUserName,senderId,senderName,channelId).subscribe();
             const dialogData: DialogData = {
                 title: 'Notice',
                 message: 'Transaction Signature : ' + signature?.signature,

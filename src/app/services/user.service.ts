@@ -23,7 +23,7 @@ export class UserService {
     ) {}
 
     async getUserById(userId): Promise<any> {
-        return await lastValueFrom(this.http.get(`${environment.apiUrl}/users?userId=${userId}`, {}))
+        return await lastValueFrom(this.http.get(`${environment.apiUrl}/users/search/id?userId=${userId}`, {}))
     }
 
     async getUsersByIds(userIds: Array<string>): Promise<any> {
