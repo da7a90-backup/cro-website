@@ -14,78 +14,78 @@ export class PaymentService {
 
     //Customer
 
-    public stripeCreateCustomer(): Promise<any> {
-        return this.http.post(`${environment.apiUrl}/payments/stripe/customer`, {}).toPromise()
-    }
+    // public stripeCreateCustomer(): Promise<any> {
+    //     return this.http.post(`${environment.apiUrl}/payments/stripe/customer`, {}).toPromise()
+    // }
 
-    public stripeGetCustomer(): Promise<any> {
-        return this.http.get(`${environment.apiUrl}/payments/stripe/customer`, {}).toPromise()
-    }
+    // public stripeGetCustomer(): Promise<any> {
+    //     return this.http.get(`${environment.apiUrl}/payments/stripe/customer`, {}).toPromise()
+    // }
 
-    public stripeUpdateCustomerPaymentMethod({ paymentMethodId }): Promise<any> {
-        return this.http
-            .patch(`${environment.apiUrl}/payments/stripe/customer/payment-method`, {
-                paymentMethodId
-            })
-            .toPromise()
-    }
+    // public stripeUpdateCustomerPaymentMethod({ paymentMethodId }): Promise<any> {
+    //     return this.http
+    //         .patch(`${environment.apiUrl}/payments/stripe/customer/payment-method`, {
+    //             paymentMethodId
+    //         })
+    //         .toPromise()
+    // }
 
     //SetupIntent and PaymentIntent
 
-    public stripeCreateSetupIntent(): Promise<any> {
-        return this.http.post(`${environment.apiUrl}/payments/stripe/setup-intent`, {}).toPromise()
-    }
+    // public stripeCreateSetupIntent(): Promise<any> {
+    //     return this.http.post(`${environment.apiUrl}/payments/stripe/setup-intent`, {}).toPromise()
+    // }
 
-    public stripeGetPaymentMethods(): Promise<any> {
-        return this.http
-            .get(`${environment.apiUrl}/payments/stripe/payment-methods`, {})
-            .toPromise()
-    }
+    // public stripeGetPaymentMethods(): Promise<any> {
+    //     return this.http
+    //         .get(`${environment.apiUrl}/payments/stripe/payment-methods`, {})
+    //         .toPromise()
+    // }
 
-    public stripeDeletePaymentMethod({ paymentMethodId }): Promise<any> {
-        return this.http
-            .delete(`${environment.apiUrl}/payments/stripe/payment-methods/${paymentMethodId}`, {})
-            .toPromise()
-    }
+    // public stripeDeletePaymentMethod({ paymentMethodId }): Promise<any> {
+    //     return this.http
+    //         .delete(`${environment.apiUrl}/payments/stripe/payment-methods/${paymentMethodId}`, {})
+    //         .toPromise()
+    // }
 
-    public stripeCreatePaymentIntent({ paymentMethodId, receiverAccountId, amount }): Promise<any> {
-        return this.http
-            .post(`${environment.apiUrl}/payments/stripe/payment-intent`, {
-                paymentMethodId,
-                receiverAccountId,
-                amount
-            })
-            .toPromise()
-    }
+    // public stripeCreatePaymentIntent({ paymentMethodId, receiverAccountId, amount }): Promise<any> {
+    //     return this.http
+    //         .post(`${environment.apiUrl}/payments/stripe/payment-intent`, {
+    //             paymentMethodId,
+    //             receiverAccountId,
+    //             amount
+    //         })
+    //         .toPromise()
+    // }
 
     //Connect Account
 
-    public stripeCreateAccount(): Promise<any> {
-        return this.http
-            .post(`${environment.apiUrl}/payments/stripe/connect/account`, {})
-            .toPromise()
-    }
+    // public stripeCreateAccount(): Promise<any> {
+    //     return this.http
+    //         .post(`${environment.apiUrl}/payments/stripe/connect/account`, {})
+    //         .toPromise()
+    // }
 
-    public stripeCreateAccountLink({ accountId, refreshAndReturnUrl }): Promise<any> {
-        return this.http
-            .post(`${environment.apiUrl}/payments/stripe/connect/account/link`, {
-                accountId,
-                refreshAndReturnUrl
-            })
-            .toPromise()
-    }
+    // public stripeCreateAccountLink({ accountId, refreshAndReturnUrl }): Promise<any> {
+    //     return this.http
+    //         .post(`${environment.apiUrl}/payments/stripe/connect/account/link`, {
+    //             accountId,
+    //             refreshAndReturnUrl
+    //         })
+    //         .toPromise()
+    // }
 
-    public stripeGetAccount(): Promise<any> {
-        return this.http
-            .get(`${environment.apiUrl}/payments/stripe/connect/account`, {})
-            .toPromise()
-    }
+    // public stripeGetAccount(): Promise<any> {
+    //     return this.http
+    //         .get(`${environment.apiUrl}/payments/stripe/connect/account`, {})
+    //         .toPromise()
+    // }
 
-    public stripeDeleteAccount(): Promise<any> {
-        return this.http
-            .delete(`${environment.apiUrl}/payments/stripe/connect/account`, {})
-            .toPromise()
-    }
+    // public stripeDeleteAccount(): Promise<any> {
+    //     return this.http
+    //         .delete(`${environment.apiUrl}/payments/stripe/connect/account`, {})
+    //         .toPromise()
+    // }
 
     // public getStreamTime() {
     //   return this.http.get(`${environment.apiUrl}/streamTime/user`).toPromise()
