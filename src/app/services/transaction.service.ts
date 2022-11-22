@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment'
-import { Observable, throwError } from 'rxjs'
+import { Observable, throwError, lastValueFrom } from 'rxjs'
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +9,7 @@ import { Observable, throwError } from 'rxjs'
 export class TransactionService {
     constructor(public http: HttpClient) {}
 
-    createTransaction(
+    async createTransaction(
         url,
         type,
         amount,
@@ -18,7 +18,7 @@ export class TransactionService {
         senderId,
         senderName,
         channelId
-    ): Observable<any> {
+    ): Promise<any> {
         url = `https://explorer.solana.com/tx/${url}?cluster=devnet`
         const data = {
             channelId: channelId,
@@ -32,24 +32,32 @@ export class TransactionService {
             type: type
         }
 
-        return this.http.post(`${environment.apiUrl}/transaction/create-transaction`, data)
-    }
-
-    getTransactionsByUserId(userId) {
-        return this.http.get(
-            `${environment.apiUrl}/transactions/get-transactions-by-user-id?id=${userId}`
+        return await lastValueFrom(
+            this.http.post(`${environment.apiUrl}/transaction/create-transaction`, data)
         )
     }
 
-    getTransactionsBySenderName(senderName) {
-        return this.http.get(
-            `${environment.apiUrl}/transactions/get-transactions-by-sender-name?senderName=${senderName}`
+    async getTransactionsByUserId(userId): Promise<any> {
+        return await lastValueFrom(
+            this.http.get(
+                `${environment.apiUrl}/transactions/get-transactions-by-user-id?id=${userId}`
+            )
         )
     }
 
-    getTransactionsByChannelId(channelId) {
-        return this.http.get(
-            `${environment.apiUrl}/transactions/get-transactions-by-channel-id?channelId=${channelId}`
+    async  getTransactionsBySenderName(senderName): Promise<any> {
+        return await lastValueFrom(
+            this.http.get(
+                `${environment.apiUrl}/transactions/get-transactions-by-sender-name?senderName=${senderName}`
+            )
+        )
+    }
+
+    async  getTransactionsByChannelId(channelId): Promise<any> {
+        return await lastValueFrom(
+            this.http.get(
+                `${environment.apiUrl}/transactions/get-transactions-by-channel-id?channelId=${channelId}`
+            )
         )
     }
 }

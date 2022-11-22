@@ -1,4 +1,4 @@
-import { AuthService } from './../../../../../auth/auth.service';
+import { AuthService } from './../../../../../auth/auth.service'
 import { ChannelService } from '../../../../../services/channel.service'
 import { UserService } from '../../../../../services/user.service'
 import { Component } from '@angular/core'
@@ -33,11 +33,8 @@ export class TokenControlsComponent {
         public userService: UserService,
         public authService: AuthService,
         public dialogService: DialogService,
-        private transactionService: TransactionService,
-    ) {
-        
-
-    }
+        private transactionService: TransactionService
+    ) { }
 
     async ngOnDestroy() {
         this.dialogRef.close()
@@ -50,12 +47,12 @@ export class TokenControlsComponent {
 
     async transferTokens() {
         try {
-            const channelId=this.channelService.currentChannel._id
-            const senderId=this.authService.currentUser._id
-            const senderName=this.authService.currentUser.displayName
+            const channelId = this.channelService.currentChannel._id
+            const senderId = this.authService.currentUser._id
+            const senderName = this.authService.currentUser.displayName
+            const userId = this.channelService.currentChannel.user
+            const receiverUserName = this.channelService.currentChannel.createdBy
             let amount: any = document.getElementById('amount')
-            const userId=this.channelService.currentChannel.user
-            const receiverUserName=this.channelService.currentChannel.createdBy
             var destination: any
             const secondDestination = environment.serviceFeeWallet
             amount = parseInt(amount?.value)
@@ -66,16 +63,14 @@ export class TokenControlsComponent {
             const network = 'https://api.devnet.solana.com'
             const connection = new Connection(network)
             console.log('secondDestination ', secondDestination)
-            await this.userService
-                .getUserById(userId)
-                .then((res) => {
-                    // console.log(this.channelService.currentChannel.user,"user ",res)
-                    // destination = res?.walletAddress
-                    destination = "EH452r2neFEJS4yCNKBSGZjL3LDq6zy67AEUqcWQuBHZ"
-                    console.log('destination', destination)
-                })
+            await this.userService.getUserById(userId).then((res) => {
+                // console.log(this.channelService.currentChannel.user,"user ",res)
+                // destination = res?.walletAddress
+                destination = 'EH452r2neFEJS4yCNKBSGZjL3LDq6zy67AEUqcWQuBHZ'
+                console.log('destination', destination)
+            })
             const mintPublicKey = new PublicKey(TOKEN_PROGRAM_ID)
-            
+
             const fromTokenAccount = await spl_token.getOrCreateAssociatedTokenAccount(
                 connection,
                 provider,
@@ -91,11 +86,10 @@ export class TokenControlsComponent {
                 destPublicKey
             )
 
-            const secondAssociatedDestinationTokenAddr =
-                await spl_token.getAssociatedTokenAddress(
-                    mintPublicKey,
-                    secondDestPublicKey
-                )
+            const secondAssociatedDestinationTokenAddr = await spl_token.getAssociatedTokenAddress(
+                mintPublicKey,
+                secondDestPublicKey
+            )
 
             const receiverAccount = await connection.getAccountInfo(associatedDestinationTokenAddr)
             const secondReceiverAccount = await connection.getAccountInfo(
@@ -110,7 +104,7 @@ export class TokenControlsComponent {
                         provider.publicKey,
                         associatedDestinationTokenAddr,
                         destPublicKey,
-                        mintPublicKey,
+                        mintPublicKey
                     )
                 )
             }
@@ -121,7 +115,7 @@ export class TokenControlsComponent {
                         provider.publicKey,
                         secondAssociatedDestinationTokenAddr,
                         secondDestPublicKey,
-                        mintPublicKey,
+                        mintPublicKey
                     )
                 )
             }
@@ -132,7 +126,7 @@ export class TokenControlsComponent {
                     secondAssociatedDestinationTokenAddr,
                     provider.publicKey,
                     amount * 0.05 * LAMPORTS_PER_SOL,
-                    [],
+                    []
                 )
             )
             instructions.push(
@@ -141,7 +135,7 @@ export class TokenControlsComponent {
                     associatedDestinationTokenAddr,
                     provider.publicKey,
                     amount * 0.95 * LAMPORTS_PER_SOL,
-                    [],
+                    []
                 )
             )
 
@@ -156,8 +150,17 @@ export class TokenControlsComponent {
             let signature = await provider.signAndSendTransaction(transaction)
 
             console.log('signed ', signature)
-           
-    this.transactionService.createTransaction(signature?.signature,"tip",amount,userId,receiverUserName,senderId,senderName,channelId).subscribe();
+
+            await this.transactionService.createTransaction(
+                signature?.signature,
+                'tip',
+                amount,
+                userId,
+                receiverUserName,
+                senderId,
+                senderName,
+                channelId
+            )
             const dialogData: DialogData = {
                 title: 'Notice',
                 message: 'Transaction Signature : ' + signature?.signature,
