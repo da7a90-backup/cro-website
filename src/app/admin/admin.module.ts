@@ -14,7 +14,6 @@ import { AdminVideoInsightsComponent } from './videos/admin-video-insights/admin
 import { AdminVideoStatisticsComponent } from './videos/admin-video-statistics/admin-video-statistics.component'
 import { AdminVideoTableComponent } from './videos/admin-video-table/admin-video-table.component'
 import { SiteSettingsComponent } from './site-settings/site-settings.component'
-import { MaintenanceSettingsComponent } from './site-settings/maintenance-settings/maintenance-settings.component'
 import { AdminsComponent } from './admins/admins.component'
 import { AddAdminComponent } from './admins/add-admin/add-admin.component'
 import { PoliciesComponent } from './policies/policies.component'
@@ -37,7 +36,6 @@ import { AddHintComponent } from './hints/add-hint/add-hint.component'
         AdminVideoStatisticsComponent,
         AdminVideoTableComponent,
         SiteSettingsComponent,
-        MaintenanceSettingsComponent,
         AdminsComponent,
         AddAdminComponent,
         PoliciesComponent,

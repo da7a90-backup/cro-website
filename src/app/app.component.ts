@@ -98,12 +98,11 @@ export class AppComponent implements OnInit {
                 await this.onInitsubMethod()
             }
 
-        } catch (e) {
+        } catch (err) {
             this.isLoading = false
-            console.log(e)
             this.error = true
         }
-        this.themeService.setTheme(this.authService.currentUser.theme || 'theme-dark')
+        this.themeService.setTheme(this.authService.currentUser?.theme || 'theme-dark')
     }
 
     private async onInitsubMethod() {
@@ -114,11 +113,9 @@ export class AppComponent implements OnInit {
                 if (this.user) {
                     this.sharedService.isLoginPage = false
                     await this.socket.emitUserConnection(this.user._id, true)
-                    this.socket.listenToMaintenanceMode().subscribe((request) => {
-                        if (request.data.isEnabled && !this.user.isAdmin) {
-                            this.router.navigate(['/maintenance'])
-                        }
-                    })
+                    if (this.firebaseService.isMaintenanceModeEnabled && !this.user.isAdmin) {
+                        this.router.navigate(['/maintenance'])
+                    }
 
                     this.socket.listenToUserConnection(this.user._id).subscribe(async (request) => {
                         this.authService.setUser(request.user)

@@ -39,7 +39,7 @@ export class ThemeService {
     }
 
     setTheme(themeToSet) {
-        this.userService.updateUser({ theme: themeToSet })
+        if (this.authService.currentUser) this.userService.updateUser({ theme: themeToSet })
         this.styleManager.setStyle('theme', `assets/styles/${themeToSet}.css`)
         this.updateAnimation()
     }
