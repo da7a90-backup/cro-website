@@ -294,9 +294,6 @@ export class ChatService {
                 source1: this.authService.currentUser._id,
                 source2: chat._id
             })
-            console.log("existingChat")
-
-            console.log(existingChat)
             if (!existingChat) {
                 chat = await this.createChat({
                     source1: this.authService.currentUser._id,
@@ -308,6 +305,12 @@ export class ChatService {
             }
         }
         this.activateChatTab(chat)
+         this.socket.emitChatMessage({
+            source1: this.authService.currentUser._id,
+            source2: chat._id,
+            message: "incoming message"
+        }) 
+        
     }
 
     async activateChatTab($chat) {
@@ -316,7 +319,6 @@ export class ChatService {
         this.activeTabs.push($chat)
         await this.clearUnreadMessageCount({ chatId: $chat.chat._id })
         $chat.chat.unreadMessageCount = 0
-        console.log(this.activeTabs)
     }
 
     async activateGroupTab($group) {

@@ -91,7 +91,8 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
         let typingUser = {
             name: this.user.displayName,
             _id: this.user._id,
-            isTyping: false
+            isTyping: false,
+            source2: this.channel._id,
         }
         if (typingUser) {
             if (keyCode == 13 && !$event.shiftKey) {
@@ -114,7 +115,8 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
         let typingUser = {
             name: this.user.displayName,
             _id: this.user._id,
-            isTyping: false
+            isTyping: false,
+            source2: this.channel._id,
         }
         if (typingUser) {
             this.timer = window.setTimeout(() => {
@@ -274,14 +276,7 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
                 this.chatService.incrementUnreadMessageCount({
                     chatId: this.channel.chat._id
                 })
-                console.log({
-                    source1: this.user._id,
-                    source2: this.channel,
-                    message: completeMessage,
-                    messages: this.chatService.chats,
-                    chatMessage: this.chatMessage
 
-                })
                 this.socket.emitChatMessage({
                     source1: this.user._id,
                     source2: this.channel._id,
