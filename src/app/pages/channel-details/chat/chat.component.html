@@ -20,12 +20,12 @@
                     </button>
                     <mat-menu #more_menu="matMenu" class="header-dropdown" xPosition="before">
                         <section class="user-menu mat-menu-content">
-                            <div (click)="toggleNotifications()">
+                            <!-- <div (click)="toggleNotifications()">
                                 <span *ngIf="!isNotificationsEnabled" class="navIcon mute-notifications"></span>
                                 <span *ngIf="!isNotificationsEnabled" class="nav-caption">Notifications disabled</span>
                                 <span *ngIf="isNotificationsEnabled" class="navIcon unmute-notifications"></span>
                                 <span *ngIf="isNotificationsEnabled" class="nav-caption">Notifications enabled</span>
-                            </div>
+                            </div> -->
                             <div (click)="leaveChannel()">
                                 <span class="navIcon leave-channel"></span>
                                 <span class="nav-caption">Leave channel</span>
