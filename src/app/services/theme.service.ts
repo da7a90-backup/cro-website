@@ -46,7 +46,7 @@ export class ThemeService {
 
     async isDarkTheme() {
         try {
-            return this.authService.currentUser.theme === 'theme-dark'
+            return this.authService.currentUser && this.authService.currentUser.theme === 'theme-dark'
         } catch (err) {
             return false
         }
