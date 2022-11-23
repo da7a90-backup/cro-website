@@ -1,7 +1,7 @@
 import { MatButtonModule } from '@angular/material/button'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, isDevMode } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
@@ -120,6 +120,9 @@ import { FriendItemComponent } from './pages/friends/friend-item/friend-item.com
 import { FriendsComponent } from './pages/friends/friends.component'
 import { CommunityDialogComponent } from './pages/community-dialog/community-dialog.component'
 import { CommunityComponent } from './pages/community-dialog/community/community.component'
+import { AngularFireModule } from '@angular/fire/compat'
+import { AngularFireRemoteConfigModule, SETTINGS } from '@angular/fire/compat/remote-config'
+import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/compat/analytics'
 
 export function playerFactory() {
     return player
@@ -239,7 +242,10 @@ export function playerFactory() {
         InfiniteScrollModule,
         MatDialogModule,
         LottieModule.forRoot({ player: playerFactory }),
-        HomeModule
+        HomeModule,
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireRemoteConfigModule,
+        AngularFireAnalyticsModule
     ],
     exports: [
         // ? HomeComponent,
@@ -276,6 +282,12 @@ export function playerFactory() {
             provide: HTTP_INTERCEPTORS,
             useClass: CatchErrorInterceptor,
             multi: true
+        },
+        UserTrackingService,
+        ScreenTrackingService,
+        {
+            provide: SETTINGS,
+            useFactory: () => isDevMode() ? { minimumFetchIntervalMillis: 10_000 } : {}
         }
     ],
     bootstrap: [AppComponent]

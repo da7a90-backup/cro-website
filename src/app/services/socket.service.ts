@@ -104,20 +104,6 @@ export class Socket {
         })
     }
 
-    listenToMaintenanceMode(): Observable<any> {
-        return new Observable((observer) => {
-            this.apiSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === 'maintenance-mode') {
-                    observer.next(JSON.parse(data.data))
-                }
-            })
-        })
-    }
-
-    emitMaintenanceMode({ isEnabled, message }) {
-        this.apiSocket.send(JSON.stringify({ eventName: `maintenance-mode`, isEnabled, message }))
-    }
-
     listenToRemovedUser(channelId): Observable<any> {
         return new Observable((observer) => {
             this.channelSocket.addEventListener(`message`, (data) => {
@@ -272,7 +258,8 @@ export class Socket {
         this.apiSocket.send(
             JSON.stringify({
                 eventName: `chat-typing`,
-                user: userId
+                user: userId,
+                isTyping: true
             })
         )
     }

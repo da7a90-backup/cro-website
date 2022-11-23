@@ -146,7 +146,7 @@ export class ChannelService {
     }
 
     isUserBlockedFromChannel(userId) {
-        return this.currentChannel.blockedUsers.some((user) => !!(user == userId))
+        return this.currentChannel.blockedUsers?.some((user) => !!(user == userId))
     }
 
     async addAttachments({ channelId, attachmentUrl }): Promise<any> {
@@ -219,7 +219,7 @@ export class ChannelService {
 
     async getChannelsByUserId({ userId, searchQuery = null, skip = 0, limit = 50 }): Promise<any> {
         return await lastValueFrom(this.http
-            .get(`${environment.apiUrl}/channels/user`, { params: { searchQuery, skip, limit } }))
+            .get(`${environment.apiUrl}/channels/user`, { params: { userId, searchQuery, skip, limit } }))
     }
 
     async getChannels(isRefresh = false) {

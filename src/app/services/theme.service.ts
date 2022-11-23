@@ -1,23 +1,14 @@
 import { Injectable, NgZone } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Observable, BehaviorSubject } from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 import { Router } from '@angular/router'
 import { AnimationItem } from 'lottie-web'
 import { AnimationOptions } from 'ngx-lottie'
 
 import { StyleManagerService } from '../style-manager.service'
-import { TokenStorage } from '../auth/token.storage'
 import { AuthService } from '../auth/auth.service'
 import { UserService } from './user.service'
 import { SharedService } from './shared.service'
-
-export interface Option {
-    backgroundColor: string
-    buttonColor: string
-    headingColor: string
-    label: string
-    value: string
-}
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
@@ -27,7 +18,6 @@ export class ThemeService {
     constructor(
         private http: HttpClient,
         private styleManager: StyleManagerService,
-        private tokenStorage: TokenStorage,
         public authService: AuthService,
         public userService: UserService,
         private router: Router,
@@ -35,20 +25,16 @@ export class ThemeService {
         private sharedService: SharedService
     ) {}
 
-    getThemeOptions(): Observable<Array<Option>> {
-        return this.http.get<Array<Option>>('assets/options.json')
-    }
-
     setTheme(themeToSet) {
-        this.tokenStorage.saveTheme(themeToSet)
+        if (this.authService.currentUser) this.userService.updateUser({ theme: themeToSet })
         this.styleManager.setStyle('theme', `assets/styles/${themeToSet}.css`)
         this.updateAnimation()
     }
 
     async isDarkTheme() {
         try {
-            return this.tokenStorage.getTheme() === 'theme-dark'
-        } catch (e) {
+            return this.authService.currentUser && this.authService.currentUser.theme === 'theme-dark'
+        } catch (err) {
             return false
         }
     }
@@ -76,7 +62,7 @@ export class ThemeService {
             } else {
                 await this.authService.logout()
             }
-        } catch (e) {
+        } catch (err) {
             await this.authService.logout()
         }
     }

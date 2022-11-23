@@ -13,7 +13,7 @@
         </div>
         <a class="user-info-container cursor-pointer" *ngIf="authService.currentUser"
             routerLink="/profile/{{ authService.currentUser.customUsername }}">
-            <img class="profile-image" [src]="authService.currentUser.avatar" />
+            <img class="profile-image" [src]="authService.currentUser.avatar" referrerpolicy="no-referrer" />
             <div class="profile-name">
                 {{ authService.currentUser.displayName }}
                 <div class="customUsername">@{{ authService.currentUser.customUsername }}</div>
@@ -40,19 +40,22 @@
             </a>
             <div class="border-bottom" *ngIf="authService.currentUser"></div>
 
-            <a class="nav-link-wrapper mint" target="_blank" rel="noreferrer">
-                <!--href="https://mint.codecrow.io"-->
+            <a class="nav-link-wrapper mint" *ngIf="firebaseService.isFeatureMintPageEnabled" target="_blank"
+                rel="noreferrer" href="https://mint.codecrow.io">
                 <span class="navIcon mint"></span>
-                <div>Mint (Soon)</div>
+                <div>Mint</div>
             </a>
-            <div class="border-bottom"></div>
+            <div class="border-bottom" *ngIf="firebaseService.isFeatureMintPageEnabled">
+            </div>
 
-            <!-- <a class="nav-link-wrapper access-keys" *ngIf="authService.currentUser" routerLink="/premium">
+            <a class="nav-link-wrapper access-keys"
+                *ngIf="authService.currentUser && firebaseService.isFeaturePremiumPageEnabled" routerLink="/premium">
                 <span class="navIcon nft"></span>
                 <div>Premium</div>
                 <span class="navIcon new-feature"></span>
             </a>
-            <div class="border-bottom" *ngIf="authService.currentUser"></div> -->
+            <div class="border-bottom" *ngIf="authService.currentUser && firebaseService.isFeaturePremiumPageEnabled">
+            </div>
 
             <!-- <a class="nav-link-wrapper" routerLink="/videos">
                 <span class="navIcon videos"></span>

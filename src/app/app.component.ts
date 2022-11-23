@@ -1,7 +1,7 @@
 import { TokenStorage } from './auth/token.storage'
 import { ChannelService } from './services/channel.service'
 import { AdminService } from './services/admin.service'
-import { Component, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core'
+import { Component, OnInit, HostListener } from '@angular/core'
 import { Router, NavigationEnd } from '@angular/router'
 import { AuthService } from './auth/auth.service'
 import { ChatService } from './services/chat.service'
@@ -15,6 +15,7 @@ import { SfxService } from './services/sfx.service'
 import { StreamingService } from './services/streaming.service'
 import { AnimationOptions } from 'ngx-lottie'
 import { ThemeService } from './services/theme.service'
+import { FirebaseService } from './services/firebase.service'
 
 @Component({
     selector: 'app-root',
@@ -43,10 +44,10 @@ export class AppComponent implements OnInit {
         private socket: Socket,
         private metaTagService: Meta,
         private tokenStorage: TokenStorage,
-        @Inject(PLATFORM_ID) private platformId: Object,
         private sfxService: SfxService,
         private streamingService: StreamingService,
-        private themeService: ThemeService
+        private themeService: ThemeService,
+        private firebaseService: FirebaseService,
     ) {
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
@@ -69,7 +70,8 @@ export class AppComponent implements OnInit {
             this.addMetaTags()
             this.isAuthenticated = await this.tokenStorage.getAuthenticatedStatus()
             this.showSideBar = this.isAuthenticated
-
+            this.firebaseService.setUserPropertyAnalytics()
+            this.firebaseService.getAllRemoteConfigValues()
             this.router.events.subscribe(async (event) => {
                 if (!(event instanceof NavigationEnd)) {
                     return
@@ -96,12 +98,11 @@ export class AppComponent implements OnInit {
                 await this.onInitsubMethod()
             }
 
-        } catch (e) {
+        } catch (err) {
             this.isLoading = false
-            console.log(e)
             this.error = true
         }
-        this.themeService.setTheme(this.tokenStorage.getTheme() || 'theme-dark')
+        this.themeService.setTheme(this.authService.currentUser?.theme || 'theme-dark')
     }
 
     private async onInitsubMethod() {
@@ -112,11 +113,9 @@ export class AppComponent implements OnInit {
                 if (this.user) {
                     this.sharedService.isLoginPage = false
                     await this.socket.emitUserConnection(this.user._id, true)
-                    this.socket.listenToMaintenanceMode().subscribe((request) => {
-                        if (request.data.isEnabled && !this.user.isAdmin) {
-                            this.router.navigate(['/maintenance'])
-                        }
-                    })
+                    if (this.firebaseService.isMaintenanceModeEnabled && !this.user.isAdmin) {
+                        this.router.navigate(['/maintenance'])
+                    }
 
                     this.socket.listenToUserConnection(this.user._id).subscribe(async (request) => {
                         this.authService.setUser(request.user)

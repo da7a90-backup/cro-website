@@ -51,6 +51,7 @@ export class ChannelItemComponent implements OnInit {
             channelId: this.channel._id
         }) // get updated channel data
         this.channel = channel
+        console.log(channel)
         if (channel) {
             const isUserBlocked = await channel.blockedUsers?.some(
                 (blockedUser) => blockedUser === this.user._id

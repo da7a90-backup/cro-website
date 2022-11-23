@@ -1,6 +1,6 @@
 {
     "name": "cro-website",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "license": "MIT",
     "type": "module",
     "scripts": {
@@ -17,12 +17,16 @@
         "format": "npm run prettier:fix && npm run lint:fix",
         "test": "playwright test"
     },
+    "scarfSettings": {
+        "enabled": false
+    },
     "private": true,
     "dependencies": {
         "@angular/cdk": "^15.0.0",
         "@angular/compiler": "^15.0.0",
+        "@angular/fire": "^7.5.0",
         "@angular/forms": "^15.0.0",
-        "@angular/material": "^15.0.0",
+        "@angular/material": "^14.2.7",
         "@angular/platform-browser": "^15.0.0",
         "@angular/platform-browser-dynamic": "^15.0.0",
         "@angular/pwa": "^15.0.0",
@@ -59,11 +63,11 @@
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "^15.0.0",
-        "@angular-eslint/builder": "15.0.0",
+        "@angular-eslint/builder": "^15.0.0",
         "@angular-eslint/eslint-plugin": "^15.0.0",
-        "@angular-eslint/eslint-plugin-template": "15.0.0",
+        "@angular-eslint/eslint-plugin-template": "^15.0.0",
         "@angular-eslint/schematics": "^15.0.0",
-        "@angular-eslint/template-parser": "15.0.0",
+        "@angular-eslint/template-parser": "^15.0.0",
         "@angular/cli": "^15.0.0",
         "@angular/compiler-cli": "^15.0.0",
         "@angular/language-service": "^15.0.0",

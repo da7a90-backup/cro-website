@@ -92,27 +92,6 @@ export class AdminService {
         return throwError(throwError)
     }
 
-    public getMaintenanceMode(): Promise<any> {
-        return this.http.get(`${environment.apiUrl}/site-settings/maintenance-mode`).toPromise()
-    }
-
-    public createMaintenanceMode(isEnabled, message): Promise<any> {
-        return new Promise<void>(async (resolve, reject) => {
-            try {
-                await this.http
-                    .patch(`${environment.apiUrl}/site-settings/maintenance-mode`, {
-                        isEnabled,
-                        message
-                    })
-                    .toPromise()
-                this.socket.emitMaintenanceMode({ isEnabled, message })
-                resolve()
-            } catch (e) {
-                reject(e)
-            }
-        })
-    }
-
     public createLegalDoc(title, createdAt, pdf): Promise<any> {
         return this.http.post(`${environment.apiUrl}/legal`, { title, createdAt, pdf }).toPromise()
     }

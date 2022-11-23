@@ -13,6 +13,7 @@ const { version: appVersion } = require('../../../package.json')
 import { environment } from '../../environments/environment'
 import { ChatService } from '../services/chat.service'
 import { SharedService } from '../services/shared.service'
+import { FirebaseService } from '../services/firebase.service'
 
 export interface Option {
     backgroundColor: string
@@ -45,7 +46,8 @@ export class SideBarComponent implements OnInit, OnDestroy {
         public channelService: ChannelService,
         public friendService: FriendService,
         public chatService: ChatService,
-        public sharedService: SharedService
+        public sharedService: SharedService,
+        public firebaseService: FirebaseService
     ) {}
 
     async ngOnInit() {
