@@ -96,6 +96,7 @@ export class ProfileComponent implements OnInit {
         if (isRefresh) {
             this.resetSkipLimit()
         }
+        console.log("this user's channels")
         const channels = await this.channelService.getChannelsByUserId({
             userId: this.otherUser._id,
             searchQuery: this.searchQuery,
