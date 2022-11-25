@@ -31,7 +31,7 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
 
     showGiphySearch = false
     giphySearchTerm = ''
-    giphyResults: any = []
+    giphyResults: any
 
     showAttachment = false
     fileToUpload: File = null
