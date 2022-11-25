@@ -1,3 +1,4 @@
+import { lastValueFrom } from 'rxjs';
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -58,32 +59,28 @@ export class ChatService {
         this.socket.emitDeleteAllMessagesToChannel(channelId)
     }
 
-    postFile(channelId: string, fileToUpload: File): Promise<any> {
+    async postFile(channelId: string, fileToUpload: File): Promise<any> {
         const formData: FormData = new FormData()
         formData.append('file', fileToUpload, fileToUpload.name)
         formData.append('channelId', channelId)
-        return this.http.put(`${environment.apiUrl}/attachments/file`, formData).toPromise()
+        return await lastValueFrom(this.http.put(`${environment.apiUrl}/attachments/file`, formData))
     }
 
-    deleteFile(key: string): Promise<any> {
-        return this.http
-            .delete(`${environment.apiUrl}/attachments/file?key=${key}`, {})
-            .toPromise()
+    async deleteFile(key: string): Promise<any> {
+        return await lastValueFrom(this.http
+            .delete(`${environment.apiUrl}/attachments/file?key=${key}`, {}))
             .then((res) => {
                 return res
             })
     }
 
-    getTrendingGifs(): Promise<any> {
-        return this.http.get(`${environment.apiUrl}/giphy/trending`).toPromise().then((result: any) => {
-            return this.http.get(result.url).toPromise
-        })
+    async getTrendingGifs(): Promise<any> {
+        return await lastValueFrom(this.http.get(`${environment.apiUrl}/giphy/trending`))
     }
 
-    searchGifs(query): Promise<any> {
-        return this.http
-            .get(`${environment.apiUrl}/giphy/search`, { params: { query } })
-            .toPromise()
+    async searchGifs(query): Promise<any> {
+        return await lastValueFrom(this.http
+            .get(`${environment.apiUrl}/giphy/search`, { params: { query } }))
     }
 
     async getMessages(chat, chatType) {
@@ -202,10 +199,9 @@ export class ChatService {
         return chat
     }
 
-    getChat({ source1, source2 }): Promise<any> {
-        return this.http
-            .get(`${environment.apiUrl}/chats/me`, { params: { source1, source2 } })
-            .toPromise()
+    async getChat({ source1, source2 }): Promise<any> {
+        return await lastValueFrom(this.http
+            .get(`${environment.apiUrl}/chats/me`, { params: { source1, source2 } }))
     }
 
     async getChats(isRefresh = false) {
@@ -258,22 +254,19 @@ export class ChatService {
         })
     }
 
-    updateChatProperties({ chatId, updatedProperties }): Promise<any> {
-        return this.http
-            .patch(`${environment.apiUrl}/chats?chatId=${chatId}`, updatedProperties)
-            .toPromise()
+    async updateChatProperties({ chatId, updatedProperties }): Promise<any> {
+        return await lastValueFrom(this.http
+            .patch(`${environment.apiUrl}/chats?chatId=${chatId}`, updatedProperties))
     }
 
-    incrementUnreadMessageCount({ chatId }): Promise<any> {
-        return this.http
-            .patch(`${environment.apiUrl}/chats/unread?chatId=${chatId}`, {})
-            .toPromise()
+    async incrementUnreadMessageCount({ chatId }): Promise<any> {
+        return await lastValueFrom(this.http
+            .patch(`${environment.apiUrl}/chats/unread?chatId=${chatId}`, {}))
     }
 
-    clearUnreadMessageCount({ chatId }): Promise<any> {
-        return this.http
-            .delete(`${environment.apiUrl}/chats/unread?chatId=${chatId}`, {})
-            .toPromise()
+    async clearUnreadMessageCount({ chatId }): Promise<any> {
+        return await lastValueFrom(this.http
+            .delete(`${environment.apiUrl}/chats/unread?chatId=${chatId}`, {}))
     }
 
     async searchChats(): Promise<any[]> {
@@ -305,12 +298,12 @@ export class ChatService {
             }
         }
         this.activateChatTab(chat)
-         this.socket.emitChatMessage({
+        this.socket.emitChatMessage({
             source1: this.authService.currentUser._id,
             source2: chat._id,
             message: "incoming message"
-        }) 
-        
+        })
+
     }
 
     async activateChatTab($chat) {
