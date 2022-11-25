@@ -32,9 +32,8 @@
         </div>
 
         <div class="search-results giphy-search custom-scroll">
-            <div class="gif-result" *ngFor="let result of giphyResults.data">
-                <img src="{{ result.images.downsized_large.url }}"
-                    (click)="sendGif(result.title, result.images.original.url)" />
+            <div class="gif-result" *ngFor="let result of giphyResults">
+                <img src="{{ result.downsized_large }}" (click)="sendGif(result.title, result.original)" />
             </div>
         </div>
 
