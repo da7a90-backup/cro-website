@@ -19,8 +19,8 @@ import { AddAdminComponent } from './admins/add-admin/add-admin.component'
 import { PoliciesComponent } from './policies/policies.component'
 import { DragDropDirective } from '../directives/drag-drop.directive'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
-import { HintsComponent } from './hints/hints.component'
-import { AddHintComponent } from './hints/add-hint/add-hint.component'
+import { FunFactsComponent } from './fun-facts/fun-facts.component'
+import { AddFunFactComponent } from './fun-facts/add-fun-fact/add-fun-fact.component'
 
 @NgModule({
     declarations: [
@@ -29,8 +29,8 @@ import { AddHintComponent } from './hints/add-hint/add-hint.component'
         UsersComponent,
         ChannelsComponent,
         LiveStreamingComponent,
-        HintsComponent,
-        AddHintComponent,
+        FunFactsComponent,
+        AddFunFactComponent,
         VideosComponent,
         AdminVideoInsightsComponent,
         AdminVideoStatisticsComponent,
