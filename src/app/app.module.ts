@@ -84,7 +84,6 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart'
 import { CreateGroupComponent } from './pages/friends/create-group/create-group.component'
 import { LoadingDialogComponent } from './controls/loading-dialog/loading-dialog.component'
 // import { HomeComponent } from './pages/home/home.component'
-import { InfiniteScrollModule } from 'ngx-infinite-scroll'
 import { WaitingRoomDialogComponent } from './pages/channel-details/channel/waiting-room-dialog/waiting-room-dialog.component'
 // import { FooterComponent } from './footer/footer.component'
 // import { UserAvatarComponent } from './controls/user-avatar/user-avatar.component'
@@ -239,7 +238,6 @@ export function playerFactory() {
         // VgControlsModule,
         // VgOverlayPlayModule,
         // VgBufferingModule,
-        InfiniteScrollModule,
         MatDialogModule,
         LottieModule.forRoot({ player: playerFactory }),
         HomeModule,

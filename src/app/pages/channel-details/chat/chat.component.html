@@ -84,9 +84,7 @@
             </div>
         </div>
         <div class="custom-scroll app-friendchat-chatlist" [hidden]="chatService.isGettingMessages" #chatDisplay
-            infinite-scroll [scrollWindow]="false" [infiniteScrollDistance]="scrollDistance"
-            [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle"
-            (scrolledUp)="onScrollUp($event)">
+            scrollUpTracker (scrolled)="onScrollUp($event)">
             <div *ngFor="let item of chatService.messages">
                 <div class="app-chat-message-row d-flex justify-content-end">
                     <app-message [Sender]="item.userData.displayName" [SenderId]="item.userData.id"

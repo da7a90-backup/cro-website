@@ -36,6 +36,7 @@ import { LazyImgDirective } from '../directives/lazy-img.directive'
 import { CategoryPipe } from './category.pipe'
 import { UserAvatarComponent } from '../controls/user-avatar/user-avatar.component'
 import { ClickOutsideDirective } from '../directives/click-outside.directive'
+import { ScrollUpTrackerDirective } from '../directives/scroll-up-tracker.directive'
 
 @NgModule({
     imports: [
@@ -107,8 +108,9 @@ import { ClickOutsideDirective } from '../directives/click-outside.directive'
         LazyImgDirective,
         CategoryPipe,
         UserAvatarComponent,
-        ClickOutsideDirective
+        ClickOutsideDirective,
+        ScrollUpTrackerDirective
     ],
-    declarations: [LazyImgDirective, CategoryPipe, UserAvatarComponent, ClickOutsideDirective]
+    declarations: [LazyImgDirective, CategoryPipe, UserAvatarComponent, ClickOutsideDirective, ScrollUpTrackerDirective]
 })
 export class SharedModule {}

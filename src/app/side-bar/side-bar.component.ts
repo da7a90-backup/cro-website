@@ -67,10 +67,10 @@ export class SideBarComponent implements OnInit, OnDestroy {
         if (this.animationOptsSubscription) this.animationOptsSubscription.unsubscribe()
     }
 
-    onModeChange() {
+    async onModeChange() {
         this.isDarkTheme = !this.isDarkTheme
         const themeToSet = this.isDarkTheme ? 'theme-dark' : 'theme-light'
-        this.themeService.setTheme(themeToSet)
+        await this.themeService.setTheme(themeToSet)
     }
 
     async showLogoutDialog() {
