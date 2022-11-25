@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core'
 import { StreamingService } from '../../../../services/streaming.service'
-import { HintService } from '../../../../services/hint.service'
+import { FunFactService } from '../../../../services/funFact.service'
 
 @Component({
     selector: 'app-video',
@@ -9,17 +9,17 @@ import { HintService } from '../../../../services/hint.service'
 })
 export class VideoComponent implements OnInit {
     @ViewChild('screenContainer') screenContainer: ElementRef
-    public hint: string
+    public funFact: string
 
     constructor(
-        private hintService: HintService,
+        private funFactService: FunFactService,
         public streamingService: StreamingService
     ) {}
 
     async ngOnInit() {
-        const hint = await this.hintService.getRandomHint()
-        if (hint) {
-            this.hint = hint.text
+        const funFact = await this.funFactService.getRandomFunFact()
+        if (funFact) {
+            this.funFact = funFact.text
         }
     }
 
