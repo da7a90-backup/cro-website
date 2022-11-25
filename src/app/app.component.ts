@@ -102,7 +102,7 @@ export class AppComponent implements OnInit {
             this.isLoading = false
             this.error = true
         }
-        this.themeService.setTheme(this.authService.currentUser?.theme || 'theme-dark')
+        await this.themeService.setTheme(this.authService.currentUser?.theme || 'theme-dark')
     }
 
     private async onInitsubMethod() {
