@@ -25,8 +25,8 @@ export class ThemeService {
         private sharedService: SharedService
     ) {}
 
-    setTheme(themeToSet) {
-        if (this.authService.currentUser) this.userService.updateUser({ theme: themeToSet })
+    async setTheme(themeToSet) {
+        if (this.authService.currentUser) await this.userService.updateUser({ theme: themeToSet })
         this.styleManager.setStyle('theme', `assets/styles/${themeToSet}.css`)
         this.updateAnimation()
     }

@@ -2,15 +2,7 @@ import { VideoService } from './../../../services/video.service'
 import { StreamingService } from './../../../services/streaming.service'
 import { SfxService, SoundEffect } from './../../../services/sfx.service'
 import { ChannelService } from '../../../services/channel.service'
-import {
-    Component,
-    OnInit,
-    OnDestroy,
-    ElementRef,
-    ViewChild,
-    Input,
-    AfterViewChecked
-} from '@angular/core'
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, Input, AfterViewChecked } from '@angular/core'
 import { Router } from '@angular/router'
 import { MatDialog } from '@angular/material/dialog'
 import { ChatService } from '../../../services/chat.service'
@@ -46,12 +38,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     public attachments: string[]
     public videoCompositions: any = []
     public host: any
-
-    throttle = 300
-    scrollDistance = 1
-    scrollUpDistance = 3
     subscription: Subscription
-
     public isNotificationsEnabled: boolean = true
 
     constructor(
@@ -228,9 +215,11 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         // })
     }
 
-    async onScrollUp(ev) {
-        const channel = { channelId: this.channelService.currentChannel._id }
-        this.chatService.getMessages(channel, 'channelChat')
+    onScrollUp(event) {
+        if (event.endReached) {
+            const channel = { channelId: this.channelService.currentChannel._id }
+            this.chatService.getMessages(channel, 'channelChat')
+        }
     }
 
     showOwnerExitDialog(title: string) {
