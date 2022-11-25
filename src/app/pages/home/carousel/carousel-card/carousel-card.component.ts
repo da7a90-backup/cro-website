@@ -39,21 +39,46 @@ export class CarouselCardComponent implements OnInit {
     scrollLeft: any;
     startDragging(e, flag, el) {
         this.mouseDown = true;
-        this.startX = e.pageX - el.offsetLeft;
-        this.scrollLeft = el.scrollLeft;
+        this.startX=e.pageX;
+        // this.startX = e.pageX - el.offsetLeft;
+        // this.scrollLeft = el.scrollLeft;
       }
+      startDraggingTouch(e, flag, el) {
+        this.mouseDown = true;
+        this.startX=e.changedTouches[0].pageX;
+        // this.startX = e.changedTouches[0].pageX - el.offsetLeft;
+        // this.scrollLeft = el.scrollLeft;
+      }
+      
       stopDragging(e, flag) {
         this.mouseDown = false;
       }
+
       moveEvent(e, el) {
         e.preventDefault();
         if (!this.mouseDown) {
           return;
         }
-        const x = e.pageX - el.offsetLeft;
-        const scroll = x - this.startX;
-         this.scrollLeft - scroll<0?this.prev.emit():this.next.emit();
+         e.pageX>this.startX?this.prev.emit():this.next.emit();
 
+        // const x = e.pageX - el.offsetLeft;
+        // const scroll = x - this.startX;
+        //  this.scrollLeft - scroll<0?this.prev.emit():this.next.emit();
+        // // console.log(e,el.offsetLeft)
+        // el.scrollLeft = this.scrollLeft - scroll;
+
+        // console.log(this.scrollLeft-scroll<0?'prev'+scroll:'next'+scroll)
+      }
+
+      moveEventTouch(e, el) {
+        e.preventDefault();
+        if (!this.mouseDown) {
+          return;
+        }
+        e.changedTouches[0].pageX>this.startX?this.prev.emit():this.next.emit();
+        // const x = e.changedTouches[0].pageX - el.offsetLeft;
+        // const scroll = x - this.startX;
+        //  this.scrollLeft - scroll<=0?this.prev.emit():this.next.emit();
         // el.scrollLeft = this.scrollLeft - scroll;
       }
     getImagePath(techName) {
