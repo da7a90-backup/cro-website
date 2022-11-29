@@ -44,7 +44,7 @@
         "events": "^3.3.0",
         "localstorage-polyfill": "^1.0.1",
         "lodash": "^4.17.21",
-        "lottie-web": "^5.7.11",
+        "lottie-web": "^5.10.0",
         "moment": "^2.29.4",
         "ng2-dragula": "^2.1.1",
         "ng2-pdf-viewer": "^9.1.3",
