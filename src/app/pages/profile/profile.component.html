@@ -2,7 +2,8 @@
     <div class="app-channels-holder">
         <div class="header-user-info" *ngIf="otherUser">
             <div class="user-img cursor-pointer" (click)="isCurrentUser ? fileInput.click() : null">
-                <img [src]="otherUser.avatar" alt="avatar" />
+                <span class="edit_pop">Edit Avatar</span>
+                <img [src]="otherUser.avatar" onerror="this.src='assets/images/team/dar-profile.png'" alt="avatar" />
                 <input accept="image/*" hidden (change)="seletedFiles($event.target.files)" #fileInput type="file"
                     id="file" />
             </div>
