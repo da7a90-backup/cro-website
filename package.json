@@ -65,7 +65,7 @@
         "@angular-eslint/schematics": "^15.0.0",
         "@angular-eslint/template-parser": "^15.1.0",
         "@angular/cli": "^15.0.1",
-        "@angular/compiler-cli": "^15.0.1",
+        "@angular/compiler-cli": "^15.0.2",
         "@angular/language-service": "^15.0.1",
         "@playwright/test": "^1.28.1",
         "@types/lodash": "^4.14.190",
