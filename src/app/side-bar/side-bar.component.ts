@@ -52,7 +52,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.getVersion()
-        this.isDarkTheme = await this.themeService.isDarkTheme()
+        this.isDarkTheme = await this.themeService.isDarkTheme
         this.animationOptsSubscription = this.themeService.logoAnimationOpts.subscribe(
             async (opts) => {
                 if (opts) {

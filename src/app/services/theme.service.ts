@@ -14,6 +14,7 @@ import { SharedService } from './shared.service'
 export class ThemeService {
     public logoAnimationOpts: BehaviorSubject<AnimationOptions> = new BehaviorSubject(null)
     private animationItem: AnimationItem
+    public isDarkTheme: boolean = true
 
     constructor(
         private http: HttpClient,
@@ -29,14 +30,7 @@ export class ThemeService {
         if (this.authService.currentUser) await this.userService.updateUser({ theme: themeToSet })
         this.styleManager.setStyle('theme', `assets/styles/${themeToSet}.css`)
         this.updateAnimation()
-    }
-
-    async isDarkTheme() {
-        try {
-            return this.authService.currentUser && this.authService.currentUser.theme === 'theme-dark'
-        } catch (err) {
-            return false
-        }
+        this.isDarkTheme = themeToSet === 'theme-dark'
     }
 
     playLottieAnimation() {
@@ -73,7 +67,7 @@ export class ThemeService {
 
     async updateAnimationOpts() {
         this.logoAnimationOpts.next({
-            path: (await this.isDarkTheme())
+            path: (this.isDarkTheme)
                 ? '/assets/lottie/logo_1_dark.json'
                 : '/assets/lottie/logo_1_light.json',
             loop: false

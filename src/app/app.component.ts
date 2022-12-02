@@ -16,6 +16,7 @@ import { StreamingService } from './services/streaming.service'
 import { AnimationOptions } from 'ngx-lottie'
 import { ThemeService } from './services/theme.service'
 import { FirebaseService } from './services/firebase.service'
+import { StyleManagerService } from './style-manager.service'
 
 @Component({
     selector: 'app-root',
@@ -48,6 +49,7 @@ export class AppComponent implements OnInit {
         private streamingService: StreamingService,
         private themeService: ThemeService,
         private firebaseService: FirebaseService,
+        private styleManager: StyleManagerService,
     ) {
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
@@ -59,6 +61,7 @@ export class AppComponent implements OnInit {
 
     async ngOnInit() {
         try {
+            this.styleManager.setStyle('theme', `assets/styles/theme-dark.css`)
             this.animationOptsSubscription = this.themeService.logoAnimationOpts.subscribe(
                 async (opts) => {
                     if (opts) {
