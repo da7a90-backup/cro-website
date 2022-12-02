@@ -76,7 +76,7 @@ export class ChatService {
 
     getTrendingGifs(): Promise<any> {
         return this.http.get(`${environment.apiUrl}/giphy/trending`).toPromise().then((result: any) => {
-            return this.http.get(result.url).toPromise
+            return result
         })
     }
 

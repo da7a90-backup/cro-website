@@ -168,7 +168,9 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
             this.giphyResults = await this.chatService.searchGifs(this.giphySearchTerm)
         } else {
             await this.getTrendingGifs()
+            console.log(this.giphyResults)
         }
+        console.log(this.giphyResults)
     }
 
     async seletedFiles(files: FileList) {
@@ -212,7 +214,6 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
             author: this.user.displayName,
             channelId: this.channelId
         }
-        this.socket.emitMessageToChannel(this.channelId, JSON.stringify(completeMessage))
         if (this.isOneToOneChat && !this.isGroupChat) {
             this.chatService.updateChatProperties({
                 chatId: this.channel.chat._id,
