@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { Injectable } from '@angular/core'
-import { PaymentService } from './payment.service'
+// import { PaymentService } from './payment.service'
 import { AuthService } from '../auth/auth.service'
 import { environment } from '../../environments/environment'
 import { lastValueFrom } from 'rxjs'
@@ -10,9 +10,9 @@ import { lastValueFrom } from 'rxjs'
     providedIn: 'root'
 })
 export class UserService {
-    public isSubscribed: boolean
-    public plan: any
-    public metadata: []
+    // public isSubscribed: boolean
+    // public plan: any
+    // public metadata: []
     public isUsersEnabled: boolean = false
     public searchQuery: string = ''
 
@@ -23,7 +23,7 @@ export class UserService {
     ) {}
 
     async getUserById(userId): Promise<any> {
-        return await lastValueFrom(this.http.get(`${environment.apiUrl}/users?userId=${userId}`, {}))
+        return await lastValueFrom(this.http.get(`${environment.apiUrl}/users/search/id?userId=${userId}`, {}))
     }
 
     async getUsersByIds(userIds: Array<string>): Promise<any> {

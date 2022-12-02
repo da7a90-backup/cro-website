@@ -365,13 +365,13 @@ export class StreamingService {
     }
 
     async stopObsStream(state = 'hibernate') {
+        await this.deleteLiveInput({ inputId: this.userData.obsStream?.uid })
         this.streamOptions.isLiveStreaming = false
         this.userData.obsStream = null
         this.userData.obsState = state
         this.updateUserInRoom(this.userData)
         this.sendDataToRoom({ type: 'toggleTrack' })
         this.checkForActiveTracks()
-        await this.deleteLiveInput({ inputId: this.userData.obsStream.uid })
     }
 
     async startScreenStream() {
@@ -454,13 +454,13 @@ export class StreamingService {
     // }
 
     async stopScreenStream(state = 'hibernate') {
+        await this.deleteLiveInput({ inputId: this.userData.screenStream?.uid })
         this.streamOptions.isLiveStreaming = false
         this.userData.screenStream = null
         this.userData.screenState = state
         this.updateUserInRoom(this.userData)
         this.sendDataToRoom({ type: 'toggleTrack' })
         this.checkForActiveTracks()
-        await this.deleteLiveInput({ inputId: this.userData.screenStream.uid })
     }
 
     async startWebcamStream() {
@@ -501,12 +501,12 @@ export class StreamingService {
     }
 
     async stopWebcamStream(state = 'hibernate') {
+        await this.deleteLiveInput({ inputId: this.userData.webcamStream?.uid })
         this.userData.webcamStream = null
         this.userData.webcamState = state
         this.updateUserInRoom(this.userData)
         this.sendDataToRoom({ type: 'toggleTrack' })
         this.checkForActiveTracks()
-        await this.deleteLiveInput({ inputId: this.userData.webcamStream.uid })
     }
 
     async startAudioStream() {
@@ -548,12 +548,12 @@ export class StreamingService {
     }
 
     async stopAudioStream(state = 'hibernate') {
+        await this.deleteLiveInput({ inputId: this.userData.audioStream?.uid })
         this.userData.audioStream = null
         this.userData.audioState = state
         this.updateUserInRoom(this.userData)
         this.sendDataToRoom({ type: 'toggleTrack' })
         this.checkForActiveTracks()
-        await this.deleteLiveInput({ inputId: this.userData.audioStream.uid })
     }
 
     //TODO: uncomment when adding video recording or when time limit for live streams

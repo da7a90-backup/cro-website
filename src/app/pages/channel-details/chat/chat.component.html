@@ -20,12 +20,12 @@
                     </button>
                     <mat-menu #more_menu="matMenu" class="header-dropdown" xPosition="before">
                         <section class="user-menu mat-menu-content">
-                            <div (click)="toggleNotifications()">
+                            <!-- <div (click)="toggleNotifications()">
                                 <span *ngIf="!isNotificationsEnabled" class="navIcon mute-notifications"></span>
                                 <span *ngIf="!isNotificationsEnabled" class="nav-caption">Notifications disabled</span>
                                 <span *ngIf="isNotificationsEnabled" class="navIcon unmute-notifications"></span>
                                 <span *ngIf="isNotificationsEnabled" class="nav-caption">Notifications enabled</span>
-                            </div>
+                            </div> -->
                             <div (click)="leaveChannel()">
                                 <span class="navIcon leave-channel"></span>
                                 <span class="nav-caption">Leave channel</span>
@@ -84,9 +84,7 @@
             </div>
         </div>
         <div class="custom-scroll app-friendchat-chatlist" [hidden]="chatService.isGettingMessages" #chatDisplay
-            infinite-scroll [scrollWindow]="false" [infiniteScrollDistance]="scrollDistance"
-            [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle"
-            (scrolledUp)="onScrollUp($event)">
+            scrollUpTracker (scrolled)="onScrollUp($event)">
             <div *ngFor="let item of chatService.messages">
                 <div class="app-chat-message-row d-flex justify-content-end">
                     <app-message [Sender]="item?.userData?.displayName" [SenderId]="item?.userData?.id"

@@ -136,7 +136,6 @@ const test_data_tip: any[] = [
 })
 export class PremiumComponent implements OnInit {
     @Output() clear = new EventEmitter()
-    public isDarkTheme: boolean
     public currentButton: string
     public walletAddress: string
     public earnedTokens: any[]
@@ -154,7 +153,6 @@ export class PremiumComponent implements OnInit {
     async ngOnInit() {
         this.currentButton = 'earned'
         this.bntStyle = 'earned'
-        this.isDarkTheme = await this.themeService.isDarkTheme()
         this.earnedNFT = []
         this.earnedTips = test_data_tip
         const { walletAddress } = await this.authService.me()

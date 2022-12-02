@@ -29,7 +29,7 @@
         position: relative;
         button.emoji__reaction {
             position: absolute;
-            bottom: -10px;
+            bottom: -20px;
             right: -26px;
             opacity: 0;
             transition: 0.3s all ease;
@@ -127,7 +127,7 @@
 .app-message-sender {
     button.emoji__reaction {
         left: -24px;
-        bottom: -12px !important;
+        bottom: -20px !important;
         right: auto !important;
     }
 }

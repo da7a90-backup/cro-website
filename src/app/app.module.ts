@@ -1,7 +1,7 @@
 import { MatButtonModule } from '@angular/material/button'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, isDevMode } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
@@ -84,7 +84,6 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart'
 import { CreateGroupComponent } from './pages/friends/create-group/create-group.component'
 import { LoadingDialogComponent } from './controls/loading-dialog/loading-dialog.component'
 // import { HomeComponent } from './pages/home/home.component'
-import { InfiniteScrollModule } from 'ngx-infinite-scroll'
 import { WaitingRoomDialogComponent } from './pages/channel-details/channel/waiting-room-dialog/waiting-room-dialog.component'
 // import { FooterComponent } from './footer/footer.component'
 // import { UserAvatarComponent } from './controls/user-avatar/user-avatar.component'
@@ -120,9 +119,9 @@ import { FriendItemComponent } from './pages/friends/friend-item/friend-item.com
 import { FriendsComponent } from './pages/friends/friends.component'
 import { CommunityDialogComponent } from './pages/community-dialog/community-dialog.component'
 import { CommunityComponent } from './pages/community-dialog/community/community.component'
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app'
-import { provideRemoteConfig, getRemoteConfig } from '@angular/fire/remote-config'
-// import { getAnalytics, provideAnalytics, UserTrackingService } from '@angular/fire/analytics'
+import { AngularFireModule } from '@angular/fire/compat'
+import { AngularFireRemoteConfigModule, SETTINGS } from '@angular/fire/compat/remote-config'
+import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/compat/analytics'
 
 export function playerFactory() {
     return player
@@ -239,13 +238,12 @@ export function playerFactory() {
         // VgControlsModule,
         // VgOverlayPlayModule,
         // VgBufferingModule,
-        InfiniteScrollModule,
         MatDialogModule,
         LottieModule.forRoot({ player: playerFactory }),
         HomeModule,
-        provideFirebaseApp(() => initializeApp(environment.firebase)),
-        provideRemoteConfig(() => getRemoteConfig()),
-        // provideAnalytics(() => getAnalytics())
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireRemoteConfigModule,
+        AngularFireAnalyticsModule
     ],
     exports: [
         // ? HomeComponent,
@@ -261,7 +259,6 @@ export function playerFactory() {
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [
-        // UserTrackingService,
         BnNgIdleService,
         ThemeService,
         TokenStorage,
@@ -283,6 +280,12 @@ export function playerFactory() {
             provide: HTTP_INTERCEPTORS,
             useClass: CatchErrorInterceptor,
             multi: true
+        },
+        UserTrackingService,
+        ScreenTrackingService,
+        {
+            provide: SETTINGS,
+            useFactory: () => isDevMode() ? { minimumFetchIntervalMillis: 10_000 } : {}
         }
     ],
     bootstrap: [AppComponent]

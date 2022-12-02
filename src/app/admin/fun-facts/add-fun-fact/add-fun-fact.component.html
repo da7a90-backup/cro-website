@@ -1,0 +1,9 @@
+<div class="card-body">
+    <mat-form-field style="width: 95%">
+        <input matInput [(ngModel)]="text" placeholder="Fun fact text" />
+    </mat-form-field>
+
+    <button mat-icon-button style="float: right" (click)="createFunFact(text)">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>

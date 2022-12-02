@@ -1,27 +1,27 @@
 import { DialogService } from '../../../services/dialog.service'
 import { Component, Inject } from '@angular/core'
-import { HintService } from '../../../services/hint.service'
+import { FunFactService } from '../../../services/funFact.service'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { DialogData } from '../../../shared/dialog-data'
 
 @Component({
-    selector: 'app-add-hint',
-    templateUrl: './add-hint.component.html',
-    styleUrls: ['./add-hint.component.scss']
+    selector: 'app-add-fun-fact',
+    templateUrl: './add-fun-fact.component.html',
+    styleUrls: ['./add-fun-fact.component.scss']
 })
-export class AddHintComponent {
+export class AddFunFactComponent {
     public text: string
     constructor(
-        private hintService: HintService,
+        private funFactService: FunFactService,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        public dialogRef: MatDialogRef<AddHintComponent>,
+        public dialogRef: MatDialogRef<AddFunFactComponent>,
         private dialogService: DialogService
     ) {}
 
-    createHint(text: string) {
+    createFunFact(text: string) {
         const dialogData: DialogData = {
-            title: 'Confirm adding hint',
-            message: `Are you sure you want to add the following hint: ${text}`,
+            title: 'Confirm adding fun fact',
+            message: `Are you sure you want to add the following fun fact: ${text}`,
             okText: 'CONFIRM',
             cancelText: 'CLOSE'
         }
@@ -33,10 +33,10 @@ export class AddHintComponent {
         dialogRef.afterClosed().subscribe(async (result) => {
             if (result) {
                 try {
-                    await this.hintService.createHint({ funFactText: text })
+                    await this.funFactService.createFunFact({ funFactText: text })
                     this.dialogRef.close()
-                } catch (e) {
-                    console.log(e)
+                } catch (err) {
+                    console.log(err)
                 }
             }
         })

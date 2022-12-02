@@ -25,7 +25,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install
+          npm install --force
           npx playwright install
 
       - name: Install Playwright Browser
@@ -38,7 +38,7 @@ jobs:
 
       - name: Convert E2E Report to Coverage Report
         run: |
-          npm install playwright-e2e-coverage-report
+          npm install playwright-e2e-coverage-report --force
           wget https://raw.githubusercontent.com/CodeCrowCorp/playwright-e2e-coverage-report/master/scripts/reportConverter.js
           chmod u+x reportConverter.js
           node ./reportConverter.js
@@ -75,7 +75,7 @@ jobs:
           node-version: 17
 
       - name: Install NPM and build
-        run: npm install && npm run build-dev
+        run: npm install --force && npm run build-dev
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
