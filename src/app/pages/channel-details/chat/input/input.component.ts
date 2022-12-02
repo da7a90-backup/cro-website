@@ -169,9 +169,7 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
             this.giphyResults = await this.chatService.searchGifs(this.giphySearchTerm)
         } else {
             await this.getTrendingGifs()
-            console.log(this.giphyResults)
         }
-        console.log(this.giphyResults)
     }
 
     async seletedFiles(files: FileList) {

@@ -76,7 +76,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
                 if (data) {
                     this.chatService.isGettingMessages = false
                     if (data.isMessageHistory) {
-                        console.log(data.data)
 
                         this.chatService.messages = [...(data.data.sort((message,nextMessage)=>message.timestamp - nextMessage.timestamp)),this.chatService.messages]
                         this.chatService.messages.pop()
