@@ -213,7 +213,6 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
             author: this.user.displayName,
             channelId: this.channelId
         }
-        this.socket.emitMessageToChannel(this.channelId, JSON.stringify(completeMessage))
         if (this.isOneToOneChat && !this.isGroupChat) {
             this.chatService.updateChatProperties({
                 chatId: this.channel.chat._id,
