@@ -153,8 +153,9 @@
 </div>
 
 <div class="d-flex align-items-center justify-content-start backgroundColor setting" (click)="togglePrivate()">
-    <span class="right-margin channel-lock"></span>
-    <span class="channel-detail-icon-color">{{isPrivate ? 'Private' : 'Public'}</span>
+    <span *ngIf="!isPrivate" class="right-margin channel-lock"></span>
+    <span *ngIf="isPrivate" class="right-margin channel-unlock"></span>
+    <span class="channel-detail-icon-color">{{ isPrivate ? 'Private' : 'Public' }}</span>
 </div>
 
 <!--TODO: show if replying to a video-->
