@@ -186,14 +186,11 @@ export class ChatService {
     }
 
     async createChat({ source1, source2, user }): Promise<any> {
-
-
-        const chat: any = await this.http
+        const chat: any = await lastValueFrom(this.http
             .put(`${environment.apiUrl}/chats`, {
                 source1,
                 source2,
-            })
-            .toPromise()
+            }))
         const doesChatExist = this.chats.some((cht) => chat._id === cht._id)
         if (!doesChatExist) this.chats.push(chat)
         return chat
@@ -209,15 +206,14 @@ export class ChatService {
             this.chats = []
             this.resetSkipLimit()
         }
-        const chats: any = await this.http
+        const chats: any = await lastValueFrom(this.http
             .get(`${environment.apiUrl}/chats`, {
                 params: {
                     searchQuery: this.searchQuery,
                     skip: this.skip,
                     limit: this.limit
                 }
-            })
-            .toPromise()
+            }))
         if (chats.length) {
             this.skip += this.limit
             this.chats.push(...chats)
@@ -244,11 +240,10 @@ export class ChatService {
 
         dialogRef.afterClosed().subscribe(async (result) => {
             if (result) {
-                await this.http
+                await lastValueFrom(this.http
                     .delete(`${environment.apiUrl}/chats`, {
                         params: { chatId: chat._id }
-                    })
-                    .toPromise()
+                    }))
                 this.chats = this.chats.filter((cht) => cht.chat._id !== chat._id)
             }
         })

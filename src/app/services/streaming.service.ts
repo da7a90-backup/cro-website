@@ -1,6 +1,6 @@
 import { SharedService } from './shared.service'
 import { SfxService, SoundEffect } from './sfx.service'
-import { Injectable } from '@angular/core'
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { TokenStorage } from '../auth/token.storage'
 import { Socket } from './socket.service'
@@ -8,9 +8,10 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 import { AuthService } from '../auth/auth.service'
 import { environment } from '../../environments/environment'
 import { ChannelService } from './channel.service'
-import { Subscription, lastValueFrom } from 'rxjs'
+import { Subscription, lastValueFrom, elementAt } from 'rxjs'
 import { DialogService } from './dialog.service'
-import { WHIPClient } from "@eyevinn/whip-web-client"
+import WHIPClient from '../util/WHIPClient'
+import WHEPClient from '../util/WHEPClient'
 
 @Injectable({
     providedIn: 'root'
@@ -23,6 +24,7 @@ export class StreamingService {
     public hasActiveTracks: boolean = false
     roomMembersSubscription: Subscription
     userActionsSubscription: Subscription
+    private renderer: Renderer2
 
     public userData: {
         id: string
@@ -95,8 +97,11 @@ export class StreamingService {
         private channelService: ChannelService,
         private sfxService: SfxService,
         private sharedService: SharedService,
-        private dialogService: DialogService
-    ) {}
+        private dialogService: DialogService,
+        private rendererFactory: RendererFactory2
+    ) {
+        this.renderer = rendererFactory.createRenderer(null, null);
+    }
 
     /************ STREAMING ************/
 
@@ -177,6 +182,10 @@ export class StreamingService {
                             this.userData = data.userData
                         }
                     }
+                    if (data.userData.obsStream) this.attachTrack(data.userData.obsStream, data.userData.id, 'obs')
+                    if (data.userData.screenStream) this.attachTrack(data.userData.screenStream, data.userData.id, 'screen')
+                    if (data.userData.webcamStream) this.attachTrack(data.userData.webcamStream, data.userData.id, 'webcam')
+                    if (data.userData.audioStream) this.attachTrack(data.userData.audioStream, data.userData.id, 'audio')
                     this.channelMembersCount = await this.getChannelMembersCount({
                         channelId: this.channelService.currentChannel._id
                     })
@@ -196,6 +205,10 @@ export class StreamingService {
                 if (!member) member = data.userData
                 switch (messageData.type) {
                     case 'toggleTrack':
+                        if (messageData.trackType === 'obs') { member.obsState === 'live' ? this.attachTrack(member.obsStream, data.userData.id, 'obs') : this.detachTrack(member.id, 'obs') }
+                        if (messageData.trackType === 'screen' && this.userData.id !== member.id) { member.screenState === 'live' ? this.attachTrack(member.screenStream, member.id, 'screen') : this.detachTrack(member.id, 'screen') }
+                        if (messageData.trackType === 'webcam' && this.userData.id !== member.id) { member.webcamState === 'live' ? this.attachTrack(member.webcamStream, member.id, 'webcam') : this.detachTrack(member.id, 'webcam') }
+                        if (messageData.trackType === 'audio' && this.userData.id !== member.id) { member.audioState === 'live' ? this.attachTrack(member.audioStream, member.id, 'audio') : this.detachTrack(member.id, 'audio') }
                         break;
                     case 'toggleRaiseHand':
                         if (this.channelService.currentChannel.user == this.userData.id &&
@@ -210,8 +223,8 @@ export class StreamingService {
                             snackBarRef.onAction().subscribe(() => {
                                 try {
                                     this.toggleUserType(member, true)
-                                } catch (e) {
-                                    console.log(e)
+                                } catch (err) {
+                                    console.log(err)
                                 }
                             })
                             // this.inAppSnackBarService.openSnackBar(`${member} would like to participate`, 'error', 3000, 'bottom', 'center')
@@ -345,18 +358,18 @@ export class StreamingService {
         if (this.streamOptions.hasWaitedOneSecondObs) {
             this.waitOneSecondObs()
             var trackName = `obs-${this.userData.id}`
-            var obsStream = await this.getLiveInput({ meta: { name: trackName }, recording: { mode: "automatic" } })
-            this.userData.obsStream = obsStream
+            var liveInput = await this.getLiveInput({ meta: { name: trackName }, recording: { mode: "automatic" } })
+            this.userData.obsStream = liveInput
             this.userData.obsState = 'live'
             this.updateUserInRoom(this.userData)
-            this.sendDataToRoom({ type: 'toggleTrack' })
+            this.sendDataToRoom({ type: 'toggleTrack', trackType: 'obs' })
             this.streamOptions.isLiveStreaming = true
             this.sfxService.playAudio(SoundEffect.StartedSharingScreen)
             this.waitOneSecondObs()
             this.checkForActiveTracks()
             this.dialogService.openDialog({
                 title: 'Streaming Information',
-                message: `URL: + ${obsStream.url} \nKey: ${obsStream.streamKey}`,
+                message: `URL: + ${liveInput.webRTC.url}`,
                 okText: 'OK'
             }, {
                 disableClose: true
@@ -370,88 +383,87 @@ export class StreamingService {
         this.userData.obsStream = null
         this.userData.obsState = state
         this.updateUserInRoom(this.userData)
-        this.sendDataToRoom({ type: 'toggleTrack' })
+        this.sendDataToRoom({ type: 'toggleTrack', trackType: 'obs' })
+        this.detachTrack(this.userData.id, 'obs')
         this.checkForActiveTracks()
     }
 
     async startScreenStream() {
         if (this.streamOptions.hasWaitedOneSecondScreen) {
             this.waitOneSecondScreen()
-            await (navigator.mediaDevices as any)
-                .getDisplayMedia({
-                    video: true,
-                    audio: true
-                })
-                .then(async (screenStream) => {
-                    var trackName = `screen-${this.userData.id}`
-                    var liveInput = await this.getLiveInput({ meta: { name: trackName }, recording: { mode: "automatic" } })
-                    this.userData.screenStream = liveInput
-                    const url = liveInput.webRTC.url
-                    // const videoIngest: any = document.getElementById(`screenStream-${this.userData.id}`)
-                    const client = new WHIPClient({
-                        endpoint: url,
-                        opts: { debug: true, iceServers: [{ urls: "stun:stun.cloudflare.com:3478" }] }
-                    })
-                    await client.setIceServersFromEndpoint()
-                    // videoIngest.srcObject = screenStream
-                    await client.ingest(screenStream)
-                    this.userData.screenState = 'live'
-                    this.updateUserInRoom(this.userData)
-                    this.sendDataToRoom({ type: 'toggleTrack' })
-                    this.userData.screenStream.on('stopped', () => {
-                        this.stopScreenStream()
-                    })
-                    this.streamOptions.isLiveStreaming = true
-                    this.sfxService.playAudio(SoundEffect.StartedSharingScreen)
-                    this.waitOneSecondScreen()
-                    this.checkForActiveTracks()
-                })
-                .catch((err) => console.error('failed. ', err))
+            var trackName = `screen-${this.userData.id}`
+            var liveInput = await this.getLiveInput({ meta: { name: trackName }, recording: { mode: "automatic" } })
+            this.userData.screenStream = liveInput
+            const videoElement = this.createVideoElement(this.userData.id, 'screen')
+            const input = new WHIPClient(liveInput.webRTC.url, videoElement, 'screen')
+            this.userData.screenState = 'live'
+            this.updateUserInRoom(this.userData)
+            this.sendDataToRoom({ type: 'toggleTrack', trackType: 'screen' })
+            // this.userData.screenStream.on('stopped', () => {
+            //     this.stopScreenStream()
+            // })
+            this.streamOptions.isLiveStreaming = true
+            this.sfxService.playAudio(SoundEffect.StartedSharingScreen)
+            this.waitOneSecondScreen()
+            this.checkForActiveTracks()
         }
     }
 
-    // attachScreen(track) {
-    //     const container = document.getElementById('screen_container')
-    //     const screenNativeElement = track.attach()
-    //     const { matches: isMobile } = window.matchMedia('(max-width: 767px)')
-    //     if (screenNativeElement) {
-    //         if (isMobile) {
-    //             screenNativeElement.style.width = '80%'
-    //             screenNativeElement.style.cssText =
-    //                 'scroll-snap-align: center; width: 80%!important; margin: 0 0.5rem;'
-    //         } else {
-    //             screenNativeElement.style.width = '100%'
-    //         }
-    //         screenNativeElement.addEventListener('dblclick', (event) => {
-    //             if (document.fullscreenElement) {
-    //                 document.exitFullscreen()
-    //             } else {
-    //                 if (screenNativeElement.requestFullscreen) {
-    //                     screenNativeElement.requestFullscreen()
-    //                 } else {
-    //                     screenNativeElement.webkitRequestFullscreen()
-    //                 }
-    //             }
-    //         })
-    //         screenNativeElement.addEventListener('click', (event) => {
-    //             event.preventDefault()
-    //             event.stopPropagation()
-    //             screenNativeElement.scrollIntoView()
-    //         })
-    //     }
-    //     container.append(screenNativeElement)
-    //     if (isMobile) {
-    //         const allVideoElements = Array.prototype.slice.call(
-    //             container.getElementsByTagName('video')
-    //         )
-    //         allVideoElements.forEach((element, i) => {
-    //             if (i === 0) element.style.marginLeft = '10%'
-    //             else element.style.marginLeft = '0.5rem'
-    //             if (allVideoElements.length === i + 1) element.style.marginRight = '10%'
-    //             else element.style.marginRight = '0.5rem'
-    //         })
-    //     }
-    // }
+    createVideoElement(memberId, trackType): HTMLVideoElement {
+        const container = trackType !== 'audio' ? document.getElementById('screen_container') : document.getElementById('audio_container')
+        const videoElement: HTMLVideoElement = this.renderer.createElement('video')
+        videoElement.setAttribute('id', `${trackType}-${memberId}`)
+        videoElement.setAttribute('autoplay', 'autoplay')
+
+        const { matches: isMobile } = window.matchMedia('(max-width: 767px)')
+        if (videoElement) {
+            if (isMobile) {
+                videoElement.style.width = '80%'
+                videoElement.style.cssText =
+                    'scroll-snap-align: center; width: 80%!important; margin: 0 0.5rem;'
+            } else {
+                videoElement.style.width = '100%'
+            }
+            videoElement.addEventListener('dblclick', (event) => {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen()
+                } else {
+                    videoElement.requestFullscreen()
+                }
+            })
+            videoElement.addEventListener('click', (event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                videoElement.scrollIntoView()
+            })
+        }
+
+        container.append(videoElement)
+
+        if (isMobile) {
+            const allVideoElements = Array.prototype.slice.call(
+                container.getElementsByTagName('video')
+            )
+            allVideoElements.forEach((element, i) => {
+                if (i === 0) element.style.marginLeft = '10%'
+                else element.style.marginLeft = '0.5rem'
+                if (allVideoElements.length === i + 1) element.style.marginRight = '10%'
+                else element.style.marginRight = '0.5rem'
+            })
+        }
+
+        return videoElement
+    }
+
+    attachTrack(liveInput, memberId, trackType) {
+        const videoElement = this.createVideoElement(memberId, trackType)
+        const output = new WHEPClient(liveInput.webRTCPlayback.url, videoElement)
+    }
+
+    detachTrack(memberId, trackType) {
+        const videoElement = document.getElementById(`${trackType}-${memberId}`)
+        videoElement.remove()
+    }
 
     async stopScreenStream(state = 'hibernate') {
         await this.deleteLiveInput({ inputId: this.userData.screenStream?.uid })
@@ -459,44 +471,27 @@ export class StreamingService {
         this.userData.screenStream = null
         this.userData.screenState = state
         this.updateUserInRoom(this.userData)
-        this.sendDataToRoom({ type: 'toggleTrack' })
+        this.sendDataToRoom({ type: 'toggleTrack', trackType: 'screen' })
+        this.detachTrack(this.userData.id, 'screen')
         this.checkForActiveTracks()
     }
 
     async startWebcamStream() {
         if (this.streamOptions.hasWaitedOneSecondWebcam) {
             this.waitOneSecondWebcam()
-            await (navigator.mediaDevices as any)
-                .getUserMedia({
-                    video: true,
-                    audio: false
-                })
-                .then(async (webcamStream) => {
-                    var trackName = `webcam-${this.userData.id}`
-                    var liveInput = await this.getLiveInput({ meta: { name: trackName }, recording: { mode: "automatic" } })
-                    this.userData.webcamStream = liveInput
-                    const url = liveInput.webRTC.url
-                    // const videoIngest: any = document.getElementById(`webcamStream-${this.userData.id}`)
-                    const client = new WHIPClient({
-                        endpoint: url,
-                        opts: { debug: true, iceServers: [{ urls: "stun:stun.cloudflare.com:3478" }] }
-                    })
-                    await client.setIceServersFromEndpoint()
-                    // videoIngest.srcObject = webcamStream
-                    await client.ingest(webcamStream)
-                    this.userData.screenState = 'live'
-                    this.updateUserInRoom(this.userData)
-                    this.sendDataToRoom({ type: 'toggleTrack' })
-                    this.userData.webcamStream.on('stopped', () => {
-                        this.stopWebcamStream()
-                    })
-                    this.waitOneSecondWebcam()
-                    this.checkForActiveTracks()
-                    this.sendDataToRoom({
-                        type: 'toggleTrack'
-                    })
-                })
-                .catch((err) => console.error('failed. ', err))
+            var trackName = `webcam-${this.userData.id}`
+            var liveInput = await this.getLiveInput({ meta: { name: trackName }, recording: { mode: "automatic" } })
+            this.userData.webcamStream = liveInput
+            const videoElement = this.createVideoElement(this.userData.id, 'webcam')
+            const input = new WHIPClient(liveInput.webRTC.url, videoElement, 'webcam')
+            this.userData.screenState = 'live'
+            this.updateUserInRoom(this.userData)
+            this.sendDataToRoom({ type: 'toggleTrack', trackType: 'webcam' })
+            // this.userData.webcamStream.on('stopped', () => {
+            //     this.stopWebcamStream()
+            // })
+            this.waitOneSecondWebcam()
+            this.checkForActiveTracks()
         }
     }
 
@@ -505,45 +500,27 @@ export class StreamingService {
         this.userData.webcamStream = null
         this.userData.webcamState = state
         this.updateUserInRoom(this.userData)
-        this.sendDataToRoom({ type: 'toggleTrack' })
+        this.sendDataToRoom({ type: 'toggleTrack', trackType: 'webcam' })
+        this.detachTrack(this.userData.id, 'webcam')
         this.checkForActiveTracks()
     }
 
     async startAudioStream() {
         if (this.streamOptions.hasWaitedOneSecondAudio) {
             this.waitOneSecondAudio()
-            await (navigator.mediaDevices as any)
-                .getUserMedia({
-                    video: false,
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        deviceId: 'default'
-                    }
-                })
-                .then(async (audioStream) => {
-                    var trackName = `audio-${this.userData.id}`
-                    var liveInput = await this.getLiveInput({ meta: { name: trackName }, recording: { mode: "automatic" } })
-                    this.userData.audioStream = liveInput
-                    const url = liveInput.webRTC.url
-                    // const videoIngest: any = document.getElementById(`audioStream-${this.userData.id}`)
-                    const client = new WHIPClient({
-                        endpoint: url,
-                        opts: { debug: true, iceServers: [{ urls: "stun:stun.cloudflare.com:3478" }] }
-                    })
-                    await client.setIceServersFromEndpoint()
-                    // videoIngest.srcObject = audioStream
-                    await client.ingest(audioStream)
-                    this.userData.audioState = 'live'
-                    this.updateUserInRoom(this.userData)
-                    this.sendDataToRoom({ type: 'toggleTrack' })
-                    this.userData.audioStream.onended = () => {
-                        this.stopAudioStream()
-                    }
-                    this.waitOneSecondAudio()
-                    this.checkForActiveTracks()
-                })
-                .catch((err) => console.error('failed. ', err))
+            var trackName = `audio-${this.userData.id}`
+            var liveInput = await this.getLiveInput({ meta: { name: trackName }, recording: { mode: "automatic" } })
+            this.userData.audioStream = liveInput
+            const videoElement = this.createVideoElement(this.userData.id, 'audio')
+            const input = new WHIPClient(liveInput.webRTC.url, videoElement, 'audio')
+            this.userData.audioState = 'live'
+            this.updateUserInRoom(this.userData)
+            this.sendDataToRoom({ type: 'toggleTrack', trackType: 'audio' })
+            // this.userData.audioStream.onended = () => {
+            //     this.stopAudioStream()
+            // }
+            this.waitOneSecondAudio()
+            this.checkForActiveTracks()
         }
     }
 
@@ -552,7 +529,8 @@ export class StreamingService {
         this.userData.audioStream = null
         this.userData.audioState = state
         this.updateUserInRoom(this.userData)
-        this.sendDataToRoom({ type: 'toggleTrack' })
+        this.sendDataToRoom({ type: 'toggleTrack', trackType: 'audio' })
+        this.detachTrack(this.userData.id, 'audio')
         this.checkForActiveTracks()
     }
 

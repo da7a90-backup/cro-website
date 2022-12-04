@@ -1,4 +1,4 @@
-import negotiateConnectionWithClientOffer from './negotiateConnectionWithClientOffer.js';
+import negotiateConnectionWithClientOffer from './negotiateConnectionWithClientOffer'
 
 /**
  * Example implementation of a client that uses WHIP to broadcast video over WebRTC
@@ -6,10 +6,10 @@ import negotiateConnectionWithClientOffer from './negotiateConnectionWithClientO
  * https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html
  */
 export default class WHIPClient {
-    private peerConnection: RTCPeerConnection;
-    private localStream?: MediaStream;
+    private peerConnection: RTCPeerConnection
+    private localStream?: MediaStream
 
-    constructor(private endpoint: string, private videoElement: HTMLVideoElement) {
+    constructor(private endpoint: string, private videoElement: HTMLVideoElement, trackType: string) {
         /**
          * Create a new WebRTC connection, using public STUN servers with ICE,
          * allowing the client to disover its own IP address.
@@ -22,7 +22,7 @@ export default class WHIPClient {
                 },
             ],
             bundlePolicy: 'max-bundle',
-        });
+        })
 
         /**
          * Listen for negotiationneeded events, and use WHIP as the signaling protocol to establish a connection
@@ -31,21 +31,21 @@ export default class WHIPClient {
          * https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html
          */
         this.peerConnection.addEventListener('negotiationneeded', async ev => {
-            console.log('Connection negotiation starting');
-            await negotiateConnectionWithClientOffer(this.peerConnection, this.endpoint);
-            console.log('Connection negotiation ended');
-        });
+            console.log('Connection negotiation starting')
+            await negotiateConnectionWithClientOffer(this.peerConnection, this.endpoint)
+            console.log('Connection negotiation ended')
+        })
 
         /**
          * While the connection is being initialized,
          * connect the video stream to the provided <video> element.
          */
-        this.accessLocalMediaSources()
+        this.accessLocalMediaSources(trackType)
             .then(stream => {
-                this.localStream = stream;
-                videoElement.srcObject = stream;
+                this.localStream = stream
+                videoElement.srcObject = stream
             })
-            .catch(console.error);
+            .catch(console.error)
     }
 
     /**
@@ -54,22 +54,63 @@ export default class WHIPClient {
      *
      * https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
      */
-    private async accessLocalMediaSources() {
-        return navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-            stream.getTracks().forEach(track => {
-                const transceiver = this.peerConnection.addTransceiver(track, {
-                    /** WHIP is only for sending streaming media */
-                    direction: 'sendonly',
-                });
-                if (track.kind == 'video' && transceiver.sender.track) {
-                    transceiver.sender.track.applyConstraints({
-                        width: 1280,
-                        height: 720,
-                    });
+    private async accessLocalMediaSources(trackType) {
+        if (trackType === 'screen') {
+            return navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then(stream => {
+                stream.getTracks().forEach(track => {
+                    const transceiver = this.peerConnection.addTransceiver(track, {
+                        /** WHIP is only for sending streaming media */
+                        direction: 'sendonly',
+                    })
+                    if (track.kind == 'video' && transceiver.sender.track) {
+                        transceiver.sender.track.applyConstraints({
+                            width: 1280,
+                            height: 720,
+                        })
+                    }
+                })
+                return stream
+            })
+        } else if (trackType === 'webcam') {
+            return navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+                stream.getTracks().forEach(track => {
+                    const transceiver = this.peerConnection.addTransceiver(track, {
+                        /** WHIP is only for sending streaming media */
+                        direction: 'sendonly',
+                    })
+                    if (track.kind == 'video' && transceiver.sender.track) {
+                        transceiver.sender.track.applyConstraints({
+                            width: 1280,
+                            height: 720,
+                        })
+                    }
+                })
+                return stream
+            })
+        } else if (trackType === 'audio') {
+            return navigator.mediaDevices.getUserMedia({
+                video: false,
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    deviceId: 'default'
                 }
-            });
-            return stream;
-        });
+            }).then(stream => {
+                stream.getTracks().forEach(track => {
+                    const transceiver = this.peerConnection.addTransceiver(track, {
+                        /** WHIP is only for sending streaming media */
+                        direction: 'sendonly',
+                    })
+                    if (track.kind == 'video' && transceiver.sender.track) {
+                        transceiver.sender.track.applyConstraints({
+                            width: 1280,
+                            height: 720,
+                        })
+                    }
+                })
+                return stream
+            })
+        }
     }
 
     /**
@@ -84,8 +125,8 @@ export default class WHIPClient {
         const response = await fetch(this.endpoint, {
             method: 'DELETE',
             mode: 'cors',
-        });
-        this.peerConnection.close();
-        this.localStream?.getTracks().forEach(track => track.stop());
+        })
+        this.peerConnection.close()
+        this.localStream?.getTracks().forEach(track => track.stop())
     }
 }
