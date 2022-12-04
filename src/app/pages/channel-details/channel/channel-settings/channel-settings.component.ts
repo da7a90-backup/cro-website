@@ -5,6 +5,7 @@ import { UserService } from '../../../../services/user.service'
 import { AuthService } from '../../../../auth/auth.service'
 import { StreamingService } from '../../../../services/streaming.service'
 import { FollowService } from '../../../../services/follow.service'
+import { ChatService } from '../../../../services/chat.service'
 
 @Component({
     selector: 'app-channel-settings',
@@ -29,7 +30,8 @@ export class ChannelSettingsComponent implements OnInit {
         private userService: UserService,
         private authService: AuthService,
         private streamingService: StreamingService,
-        private followService: FollowService
+        private followService: FollowService,
+        public chatService: ChatService
     ) {}
 
     async ngOnInit() {

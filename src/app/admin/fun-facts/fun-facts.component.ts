@@ -1,30 +1,30 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
-import { HintService } from '../../services/hint.service'
-import { AddHintComponent } from './add-hint/add-hint.component'
+import { FunFactService as FunFactService } from '../../services/funFact.service'
+import { AddFunFactComponent } from './add-fun-fact/add-fun-fact.component'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import { MatTableDataSource } from '@angular/material/table'
 import { MatDialog } from '@angular/material/dialog'
 
 @Component({
-    selector: 'app-hints',
-    templateUrl: './hints.component.html',
-    styleUrls: ['./hints.component.scss']
+    selector: 'app-fun-facts',
+    templateUrl: './fun-facts.component.html',
+    styleUrls: ['./fun-facts.component.scss']
 })
-export class HintsComponent implements OnInit {
+export class FunFactsComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
     @ViewChild(MatSort, { static: true }) sort: MatSort
     public displayedColumns: string[] = ['text', 'options']
     public dataSource: MatTableDataSource<any>
-    public hints: any = []
+    public funFacts: any = []
     public filter: string
 
     public pageNumber: number = 0
     public pageLimit: number = 5
     public totalCount: number = 0
 
-    constructor(private hintService: HintService, private dialog: MatDialog) {
-        this.dataSource = new MatTableDataSource(this.hints)
+    constructor(private funFactService: FunFactService, private dialog: MatDialog) {
+        this.dataSource = new MatTableDataSource(this.funFacts)
     }
 
     async ngOnInit() {
@@ -35,13 +35,13 @@ export class HintsComponent implements OnInit {
 
     async loadPage() {
         try {
-            const { hints, total } = await this.hintService.getHints({
+            const { funFacts, total } = await this.funFactService.getFunFacts({
                 searchQuery: this.filter,
                 skip: this.pageNumber * this.pageLimit,
                 limit: this.pageLimit
             })
-            this.hints = hints
-            this.dataSource = new MatTableDataSource(this.hints)
+            this.funFacts = funFacts
+            this.dataSource = new MatTableDataSource(this.funFacts)
             this.totalCount = total
         } catch (err) {
             console.log(err)
@@ -49,7 +49,7 @@ export class HintsComponent implements OnInit {
     }
 
     add() {
-        const dialogRef = this.dialog.open(AddHintComponent, {
+        const dialogRef = this.dialog.open(AddFunFactComponent, {
             width: '900px'
         })
         dialogRef.afterClosed().subscribe((data) => {
@@ -58,7 +58,7 @@ export class HintsComponent implements OnInit {
     }
 
     async delete(funFactId) {
-        await this.hintService.deleteHint({ funFactId })
+        await this.funFactService.deleteFunFact({ funFactId })
         this.loadPage()
     }
 

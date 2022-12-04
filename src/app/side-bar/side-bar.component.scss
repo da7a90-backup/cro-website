@@ -219,6 +219,9 @@
                         width: 90%;
                     }
                 }
+                a:hover {
+                    background: none;
+                }
             }
             .user-info-container {
                 cursor: pointer;
@@ -313,11 +316,4 @@
     div {
         color: #40b58a;
     }
-}
-
-.header-dropdown .user-menu > div:hover,
-a:hover,
-.custom-dropdown .user-menu > div:hover,
-a:hover {
-    background: none;
 }

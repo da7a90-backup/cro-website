@@ -1,6 +1,6 @@
 <div class="stream-container d-block" [ngClass]="{ 'room-members-list': streamingService.roomMembers.length >= 0 }">
     <div class="stream-holder d-block">
-        <div class="hint">
+        <div>
             <app-video class="app-content-video">
             </app-video>
             <!-- <div *ngIf="streamingService.streamOptions.isRecording" class="recording-indicator">
@@ -109,7 +109,9 @@
                         streamingService.userData.screenStream
                             ? streamingService.stopScreenStream()
                             : streamingService.startScreenStream()
-                    " [disabled]="!streamingService.streamOptions.hasWaitedOneSecondScreen" [matTooltip]="
+                    "
+                    [disabled]="!streamingService.streamOptions.hasWaitedOneSecondScreen || streamingService.userData.obsState === 'live'"
+                    [matTooltip]="
                         streamingService.userData.screenStream ? 'Stop sharing' : 'Share screen'
                     ">
                     <div class="row justify-content-center">
@@ -124,7 +126,9 @@
                         streamingService.userData.webcamStream
                             ? streamingService.stopWebcamStream()
                             : streamingService.startWebcamStream()
-                    " [disabled]="!streamingService.streamOptions.hasWaitedOneSecondWebcam" [matTooltip]="
+                    "
+                    [disabled]="!streamingService.streamOptions.hasWaitedOneSecondWebcam || streamingService.userData.obsState === 'live'"
+                    [matTooltip]="
                         streamingService.userData.webcamStream ? 'Stop sharing' : 'Share webcam'
                     ">
                     <div class="row justify-content-center">
@@ -139,7 +143,8 @@
                         streamingService.userData.audioStream
                             ? streamingService.stopAudioStream()
                             : streamingService.startAudioStream()
-                    " [disabled]="!streamingService.streamOptions.hasWaitedOneSecondAudio"
+                    "
+                    [disabled]="!streamingService.streamOptions.hasWaitedOneSecondAudio || streamingService.userData.obsState === 'live'"
                     [matTooltip]="streamingService.userData.audioState === 'live' ? 'Mute' : 'Unmute'">
                     <div class="row justify-content-center">
                         <i class="stream-control-icon stream-control-mute"
@@ -204,7 +209,8 @@
                             : streamingService.startScreenStream()" [disabled]="streamingService.userData.screenState === 'restricted' 
                     || !streamingService.streamOptions.hasWaitedOneSecondScreen 
                     || streamingService.userData.userType === 'listener' 
-                    || streamingService.streamOptions.isEveryoneSilenced"
+                    || streamingService.streamOptions.isEveryoneSilenced 
+                    || streamingService.userData.obsState === 'live'"
                     [matTooltip]="streamingService.userData.screenStream ? 'Stop sharing' : 'Share screen'">
                     <div class="row justify-content-center">
                         <i class="stream-control-icon stream-control-stop-screen-share"
@@ -218,11 +224,11 @@
                         streamingService.userData.webcamStream
                             ? streamingService.stopWebcamStream()
                             : streamingService.startWebcamStream()
-                    " [disabled]="
-                        streamingService.userData.webcamState === 'restricted' ||
-                        !streamingService.streamOptions.hasWaitedOneSecondWebcam ||
-                        streamingService.userData.userType === 'listener' ||
-                        streamingService.streamOptions.isEveryoneSilenced
+                    " [disabled]="streamingService.userData.webcamState === 'restricted'
+                        || !streamingService.streamOptions.hasWaitedOneSecondWebcam
+                        || streamingService.userData.userType === 'listener'
+                        || streamingService.streamOptions.isEveryoneSilenced
+                        || streamingService.userData.obsState === 'live'
                     " [matTooltip]="
                         streamingService.userData.webcamStream ? 'Stop sharing' : 'Share webcam'
                     ">
@@ -242,7 +248,8 @@
                         streamingService.userData.audioState === 'restricted' ||
                         !streamingService.streamOptions.hasWaitedOneSecondAudio ||
                         streamingService.userData.userType === 'listener' ||
-                        streamingService.streamOptions.isEveryoneSilenced
+                        streamingService.streamOptions.isEveryoneSilenced ||
+                        streamingService.userData.obsState === 'live'
                     " [matTooltip]="streamingService.userData.audioState === 'live' ? 'Mute' : 'Unmute'">
                     <div class="row justify-content-center">
                         <i class="stream-control-icon stream-control-mute"

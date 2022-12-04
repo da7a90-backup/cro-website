@@ -1,4 +1,4 @@
-import negotiateConnectionWithClientOffer from './negotiateConnectionWithClientOffer.js';
+import negotiateConnectionWithClientOffer from './negotiateConnectionWithClientOffer'
 
 /**
  * Example implementation of a client that uses WHEP to playback video over WebRTC
@@ -6,11 +6,11 @@ import negotiateConnectionWithClientOffer from './negotiateConnectionWithClientO
  * https://www.ietf.org/id/draft-murillo-whep-00.html
  */
 export default class WHEPClient {
-    private peerConnection: RTCPeerConnection;
-    private stream: MediaStream;
+    private peerConnection: RTCPeerConnection
+    private stream: MediaStream
 
     constructor(private endpoint: string, private videoElement: HTMLVideoElement) {
-        this.stream = new MediaStream();
+        this.stream = new MediaStream()
 
         /**
          * Create a new WebRTC connection, using public STUN servers with ICE,
@@ -24,15 +24,15 @@ export default class WHEPClient {
                 },
             ],
             bundlePolicy: 'max-bundle',
-        });
+        })
 
         /** https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/addTransceiver */
         this.peerConnection.addTransceiver('video', {
             direction: 'recvonly',
-        });
+        })
         this.peerConnection.addTransceiver('audio', {
             direction: 'recvonly',
-        });
+        })
 
         /**
          * When new tracks are received in the connection, store local references,
@@ -41,39 +41,39 @@ export default class WHEPClient {
          * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/track_event
          */
         this.peerConnection.ontrack = event => {
-            const track = event.track;
-            const currentTracks = this.stream.getTracks();
-            const streamAlreadyHasVideoTrack = currentTracks.some(track => track.kind === 'video');
-            const streamAlreadyHasAudioTrack = currentTracks.some(track => track.kind === 'audio');
+            const track = event.track
+            const currentTracks = this.stream.getTracks()
+            const streamAlreadyHasVideoTrack = currentTracks.some(track => track.kind === 'video')
+            const streamAlreadyHasAudioTrack = currentTracks.some(track => track.kind === 'audio')
             switch (track.kind) {
                 case 'video':
                     if (streamAlreadyHasVideoTrack) {
-                        break;
+                        break
                     }
-                    this.stream.addTrack(track);
-                    break;
+                    this.stream.addTrack(track)
+                    break
                 case 'audio':
                     if (streamAlreadyHasAudioTrack) {
-                        break;
+                        break
                     }
-                    this.stream.addTrack(track);
-                    break;
+                    this.stream.addTrack(track)
+                    break
                 default:
-                    console.log('got unknown track ' + track);
+                    console.log('got unknown track ' + track)
             }
-        };
+        }
 
         this.peerConnection.addEventListener('connectionstatechange', ev => {
             if (this.peerConnection.connectionState !== 'connected') {
-                return;
+                return
             }
             if (!this.videoElement.srcObject) {
-                this.videoElement.srcObject = this.stream;
+                this.videoElement.srcObject = this.stream
             }
-        });
+        })
 
         this.peerConnection.addEventListener('negotiationneeded', ev => {
-            negotiateConnectionWithClientOffer(this.peerConnection, this.endpoint);
-        });
+            negotiateConnectionWithClientOffer(this.peerConnection, this.endpoint)
+        })
     }
 }

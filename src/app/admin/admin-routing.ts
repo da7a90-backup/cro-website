@@ -9,7 +9,7 @@ import { LiveStreamingComponent } from './live-streaming/live-streaming.componen
 import { VideosComponent } from './videos/videos.component'
 import { SiteSettingsComponent } from './site-settings/site-settings.component'
 import { PoliciesComponent } from './policies/policies.component'
-import { HintsComponent } from './hints/hints.component'
+import { FunFactsComponent } from './fun-facts/fun-facts.component'
 
 export const routes: Routes = [
     {
@@ -42,8 +42,8 @@ export const routes: Routes = [
                 canActivate: [AuthGuard, OnlyAdminUsersGuard]
             },
             {
-                path: 'hints',
-                component: HintsComponent,
+                path: 'fun-facts',
+                component: FunFactsComponent,
                 canActivate: [AuthGuard, OnlyAdminUsersGuard]
             },
             {

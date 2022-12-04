@@ -1,46 +1,45 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from '../../environments/environment'
+import { lastValueFrom } from 'rxjs'
 
 @Injectable({
     providedIn: 'root'
 })
 export class FollowService {
-    constructor(public http: HttpClient) {}
+    constructor(
+        public http: HttpClient
+    ) {}
 
     /**
      * @param source1 person you want to follow
      * @param source2 your user id
      */
-    createFollow({ source1, source2 }): Promise<any> {
-        return this.http.put(`${environment.apiUrl}/follow`, { source1, source2 }).toPromise()
+    async createFollow({ source1, source2 }): Promise<any> {
+        return await lastValueFrom(this.http.put(`${environment.apiUrl}/follow`, { source1, source2 }))
     }
 
-    getFollows({ source, sourceType, searchQuery, skip, limit }): Promise<any> {
-        return this.http
+    async getFollows({ source, sourceType, searchQuery, skip, limit }): Promise<any> {
+        return await lastValueFrom(this.http
             .get(`${environment.apiUrl}/follow`, {
                 params: { source, sourceType, searchQuery, skip, limit }
-            })
-            .toPromise()
+            }))
     }
 
-    getFollowCount({ source, sourceType }): Promise<any> {
-        return this.http
+    async getFollowCount({ source, sourceType }): Promise<any> {
+        return await lastValueFrom(this.http
             .get(`${environment.apiUrl}/follow/count`, {
                 params: { source, sourceType }
-            })
-            .toPromise()
+            }))
     }
 
-    deleteFollow({ source1, source2 }): Promise<any> {
-        return this.http
-            .delete(`${environment.apiUrl}/follow`, { params: { source1, source2 } })
-            .toPromise()
+    async deleteFollow({ source1, source2 }): Promise<any> {
+        return await lastValueFrom(this.http
+            .delete(`${environment.apiUrl}/follow`, { params: { source1, source2 } }))
     }
 
-    getFollowRelationship({ source }): Promise<any> {
-        return this.http
-            .get(`${environment.apiUrl}/follow/relationship`, { params: { source } })
-            .toPromise()
+    async getFollowRelationship({ source }): Promise<any> {
+        return await lastValueFrom(this.http
+            .get(`${environment.apiUrl}/follow/relationship`, { params: { source } }))
     }
 }

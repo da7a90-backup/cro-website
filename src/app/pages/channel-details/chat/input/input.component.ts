@@ -18,6 +18,7 @@ import { SfxService, SoundEffect } from '../../../../services/sfx.service'
 import { Util } from '../../../../util/util'
 import { AuthService } from '../../../../auth/auth.service'
 import { Socket } from '../../../../services/socket.service'
+import { lastValueFrom } from 'rxjs'
 
 @Component({
     selector: 'app-input',
@@ -30,7 +31,7 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
 
     showGiphySearch = false
     giphySearchTerm = ''
-    giphyResults: any = []
+    giphyResults: any
 
     showAttachment = false
     fileToUpload: File = null
@@ -71,7 +72,7 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
             this.channelId = this.channel._id
         }
         //   if (this.isOneToOneChat && !this.isGroupChat) this.channel._id = this.channel.user._id
-        this.getTrendingGifs()
+        await this.getTrendingGifs()
     }
 
     ngAfterViewChecked() {
@@ -99,13 +100,13 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
                 $event.preventDefault()
                 typingUser.isTyping = true
                 this.isOneToOneChat ? this.chatService.emitChannelChatTypingByUser(typingUser)
-                : this.chatService.emitChannelChatTypingByUser(typingUser, this.channel._id)
+                    : this.chatService.emitChannelChatTypingByUser(typingUser, this.channel._id)
             } else {
                 typingUser.isTyping = true
 
                 this.isOneToOneChat ? this.chatService.emitChannelChatTypingByUser(typingUser)
-                : this.chatService.emitChannelChatTypingByUser(typingUser, this.channel._id)
-                    
+                    : this.chatService.emitChannelChatTypingByUser(typingUser, this.channel._id)
+
             }
         }
     }
@@ -121,7 +122,7 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
         if (typingUser) {
             this.timer = window.setTimeout(() => {
                 this.isOneToOneChat ? this.chatService.emitChannelChatTypingByUser(typingUser)
-                : this.chatService.emitChannelChatTypingByUser(this.channel._id, typingUser)
+                    : this.chatService.emitChannelChatTypingByUser(this.channel._id, typingUser)
             }, 1000)
         }
     }
@@ -212,7 +213,6 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
             author: this.user.displayName,
             channelId: this.channelId
         }
-        this.socket.emitMessageToChannel(this.channelId, JSON.stringify(completeMessage))
         if (this.isOneToOneChat && !this.isGroupChat) {
             this.chatService.updateChatProperties({
                 chatId: this.channel.chat._id,
@@ -227,10 +227,10 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
             this.socket.emitChatMessage({
                 source1: this.user._id,
                 source2: this.channel._id,
-                message:completeMessage
+                message: completeMessage
             })
         }
-        else{
+        else {
             this.socket.emitMessageToChannel(this.channelId, JSON.stringify(completeMessage))
         }
         this.showGiphySearch = false
@@ -283,7 +283,7 @@ export class InputComponent implements OnInit, OnChanges, AfterViewChecked {
                     message: completeMessage
                 })
             }
-            else{
+            else {
                 this.socket.emitMessageToChannel(this.channelId, JSON.stringify(completeMessage))
             }
             this.chatMessage = null

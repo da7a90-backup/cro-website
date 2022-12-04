@@ -29,9 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     public sortedChannels: any[]
     public stickySearchHeader: boolean = false
     public featuredChannels: any[] = []
-
     public showUsers: boolean = false
-    public isDarkTheme: boolean = false
 
     constructor(
         public authService: AuthService,
@@ -49,7 +47,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         const { title } = Util.getMetaTagData()
         this.titleService.setTitle(title)
         window.addEventListener('scroll', this.scrollEvent, true)
-        this.isDarkTheme = await this.themeService.isDarkTheme()
         this.channelService.channelsBehavior.subscribe(async (channels) => {
             this.sortedChannels = channels
             this.featuredChannels = channels
