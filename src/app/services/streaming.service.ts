@@ -364,7 +364,7 @@ export class StreamingService {
             this.updateUserInRoom(this.userData)
             this.sendDataToRoom({ type: 'toggleTrack', trackType: 'obs' })
             this.streamOptions.isLiveStreaming = true
-            this.sfxService.playAudio(SoundEffect.StartedSharingScreen)
+            // this.sfxService.playAudio(SoundEffect.StartedSharingScreen)
             this.waitOneSecondObs()
             this.checkForActiveTracks()
             this.dialogService.openDialog({
@@ -403,7 +403,7 @@ export class StreamingService {
             //     this.stopScreenStream()
             // })
             this.streamOptions.isLiveStreaming = true
-            this.sfxService.playAudio(SoundEffect.StartedSharingScreen)
+            // this.sfxService.playAudio(SoundEffect.StartedSharingScreen)
             this.waitOneSecondScreen()
             this.checkForActiveTracks()
         }
@@ -559,7 +559,7 @@ export class StreamingService {
     toggleRaiseHand() {
         if (this.streamOptions.hasWaitedOneSecondRaiseHand) {
             this.waitOneSecondRaiseHand()
-            this.sfxService.playAudio(SoundEffect.AskedToSpeak)
+            // this.sfxService.playAudio(SoundEffect.AskedToSpeak)
             this.sendDataToRoom({
                 type: 'toggleRaiseHand',
                 userId: this.userData.id,
