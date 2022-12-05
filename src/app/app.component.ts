@@ -112,6 +112,7 @@ export class AppComponent implements OnInit {
         try {
             this.user = await this.authService.me()
             await this.channelService.getTechList()
+            await this.sfxService.getAllSavedMutedSfx()
             const onConnectionSuccess = async () => {
                 if (this.user) {
                     this.sharedService.isLoginPage = false
@@ -130,10 +131,8 @@ export class AppComponent implements OnInit {
                 }
             }
             if (this.socket.apiSocket.readyState == WebSocket.OPEN) onConnectionSuccess()
-
-            await this.sfxService.getAllSavedMutedSfx()
-        } catch (e) {
-            console.log(e)
+        } catch (err) {
+            console.log(err)
         }
     }
 

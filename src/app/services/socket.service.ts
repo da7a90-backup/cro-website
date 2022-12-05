@@ -369,7 +369,7 @@ export class Socket {
             this.channelSocket.addEventListener(`message`, (data) => {
                 if (
                     JSON.parse(data.data).eventName === `channel-streaming-user-actions` &&
-                    JSON.parse(data.data).channelId === channelId
+                    JSON.parse(data.data).userData.channel === channelId
                 ) {
                     observer.next(JSON.parse(data.data))
                 }
