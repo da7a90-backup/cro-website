@@ -19,7 +19,7 @@ export class FirebaseService {
     ) {}
 
     public setUserPropertyAnalytics() {
-        const env = environment.name === 'local' || 'development' ? 'dev' : 'beta'
+        const env = environment.name === 'local' || 'development' ? 'dev' : 'prod'
         this.analytics.setUserProperties({ server_env: env })
     }
 
