@@ -7,11 +7,11 @@ import { environment } from '../../environments/environment'
     providedIn: 'root'
 })
 export class FirebaseService {
-    public isMaintenanceModeEnabled: any = false
-    public isFeatureVideoResponsesEnabled: any = false
-    public isFeatureGroupChatEnabled: any = false
-    public isFeatureMintPageEnabled: any = false
-    public isFeaturePremiumPageEnabled: any = false
+    public isMaintenanceModeEnabled: boolean = false
+    public isFeatureVideoResponsesEnabled: boolean = false
+    public isFeatureGroupChatEnabled: boolean = false
+    public isFeatureMintPageEnabled: boolean = false
+    public isFeaturePremiumPageEnabled: boolean = false
 
     constructor(
         private remoteConfig: AngularFireRemoteConfig,
@@ -24,6 +24,7 @@ export class FirebaseService {
     }
 
     public async getAllRemoteConfigValues() {
+        (await this.remoteConfig.settings).minimumFetchIntervalMillis = environment.production ? 21600000 : 360000
         this.remoteConfig.fetchAndActivate().then(() => {
             this.remoteConfig.getAll().then((changes) => {
                 this.isMaintenanceModeEnabled = changes.site_settings_maintenance_mode.asBoolean()

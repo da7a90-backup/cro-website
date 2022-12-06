@@ -20,8 +20,8 @@ export class MaintenanceGuard implements CanActivate {
         if (isAuthenticated) {
             try {
                 if (this.firebaseService.isMaintenanceModeEnabled) {
-                    const user = this.authService.currentUser
-                    if (!user.isAdmin) {
+                    const user = await this.authService.me()
+                    if (user && !user.isAdmin) {
                         this.router.navigate(['/maintenance'])
                         return false
                     } else {
