@@ -639,11 +639,13 @@ export class StreamingService {
     }
 
     sendDataToRoom(message) {
-        this.socket.emitUserActions({
-            channelId: this.channelService.currentChannel._id,
-            userData: this.userData,
-            message: JSON.stringify(message)
-        })
+        if (this.channelService.currentChannel) {
+            this.socket.emitUserActions({
+                channelId: this.channelService.currentChannel._id,
+                userData: this.userData,
+                message: JSON.stringify(message)
+            })
+        }
     }
 
     public waitOneSecondObs() {
