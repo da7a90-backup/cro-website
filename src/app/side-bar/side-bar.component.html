@@ -26,35 +26,43 @@
             </a>
             <div class="border-bottom" *ngIf="authService.currentUser"></div>
 
-            <a class="nav-link-wrapper" *ngIf="authService.currentUser" (click)="showUsersDialog()">
+            <a class="nav-link-wrapper" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled"
+                (click)="showUsersDialog()">
                 <span class="navIcon community"></span>
                 <div>Community</div>
                 <span class="navIcon chevron-right"></span>
             </a>
-            <div class="border-bottom" *ngIf="authService.currentUser"></div>
+            <div class="border-bottom" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled">
+            </div>
 
-            <a class="nav-link-wrapper" *ngIf="authService.currentUser" (click)="showChatsDialog()">
+            <a class="nav-link-wrapper" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled"
+                (click)="showChatsDialog()">
                 <span class="navIcon friends-chat"></span>
                 <div>Messages</div>
                 <span class="navIcon chevron-right"></span>
             </a>
-            <div class="border-bottom" *ngIf="authService.currentUser"></div>
+            <div class="border-bottom" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled">
+            </div>
 
-            <a class="nav-link-wrapper mint" *ngIf="firebaseService.isFeatureMintPageEnabled" target="_blank"
-                rel="noreferrer" href="https://mint.codecrow.io">
+            <a class="nav-link-wrapper mint"
+                *ngIf="firebaseService.isFeatureMintPageEnabled && !firebaseService.isMaintenanceModeEnabled"
+                target="_blank" rel="noreferrer" href="https://mint.codecrow.io">
                 <span class="navIcon mint"></span>
                 <div>Mint</div>
             </a>
-            <div class="border-bottom" *ngIf="firebaseService.isFeatureMintPageEnabled">
+            <div class="border-bottom"
+                *ngIf="firebaseService.isFeatureMintPageEnabled && !firebaseService.isMaintenanceModeEnabled">
             </div>
 
             <a class="nav-link-wrapper access-keys"
-                *ngIf="authService.currentUser && firebaseService.isFeaturePremiumPageEnabled" routerLink="/premium">
+                *ngIf="authService.currentUser && firebaseService.isFeaturePremiumPageEnabled && !firebaseService.isMaintenanceModeEnabled"
+                routerLink="/premium">
                 <span class="navIcon nft"></span>
                 <div>Premium</div>
                 <span class="navIcon new-feature"></span>
             </a>
-            <div class="border-bottom" *ngIf="authService.currentUser && firebaseService.isFeaturePremiumPageEnabled">
+            <div class="border-bottom"
+                *ngIf="authService.currentUser && firebaseService.isFeaturePremiumPageEnabled && !firebaseService.isMaintenanceModeEnabled">
             </div>
 
             <!-- <a class="nav-link-wrapper" routerLink="/videos">
@@ -78,11 +86,13 @@
             </a>
             <div class="border-bottom"></div>
 
-            <a class="nav-link-wrapper" *ngIf="authService.currentUser" routerLink="/settings">
+            <a class="nav-link-wrapper" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled"
+                routerLink="/settings">
                 <span class="navIcon account-settings"></span>
                 <div>Settings</div>
             </a>
-            <div class="border-bottom" *ngIf="authService.currentUser"></div>
+            <div class="border-bottom" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled">
+            </div>
 
             <a class="nav-link-wrapper theme-selector" *ngIf="authService.currentUser"
                 (click)="$event.stopPropagation()">

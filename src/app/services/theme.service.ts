@@ -29,17 +29,14 @@ export class ThemeService {
     async setTheme(themeToSet) {
         if (this.authService.currentUser) await this.userService.updateUser({ theme: themeToSet })
         this.styleManager.setStyle('theme', `assets/styles/${themeToSet}.css`)
-        this.updateAnimation()
         this.isDarkTheme = themeToSet === 'theme-dark'
+        this.updateAnimation()
     }
 
     playLottieAnimation() {
         this.sharedService.wasHomePressed = true
         this.navigate('/')
-        this.ngZone.runOutsideAngular(() => {
-            this.animationItem.stop()
-            this.animationItem.play()
-        })
+        this.updateAnimation()
     }
 
     async navigate(link) {
