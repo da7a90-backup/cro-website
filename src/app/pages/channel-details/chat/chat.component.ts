@@ -70,6 +70,8 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.isNotificationsEnabled =
             this.channelService.currentChannel?.notificationSubscribers?.includes(this.userId) || true
         console.log(this.channelService.currentChannel._id)
+        const channel = { channelId: this.channelService.currentChannel._id }
+        this.chatService.getMessages(channel, 'channelChat')
         this.subscription = this.socket
             .listenToChannelMessage(this.channelService.currentChannel._id)
             .subscribe((data) => {
@@ -77,7 +79,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
                     this.chatService.isGettingMessages = false
                     if (data.isMessageHistory) {
 
-                        this.chatService.messages = [...(data.data.sort((message,nextMessage)=>message.timestamp - nextMessage.timestamp)),this.chatService.messages]
+                        this.chatService.messages = [...(data.data.sort((message, nextMessage) => message.timestamp - nextMessage.timestamp)), this.chatService.messages]
                         this.chatService.messages.pop()
                         if (!this.hasInitialMessages) {
                             this.hasScrolledBottom = false
