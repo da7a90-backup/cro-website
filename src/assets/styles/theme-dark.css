@@ -3281,11 +3281,6 @@ mat-ink-bar.mat-ink-bar {
     background: #19191d;
 }
 
-:host .ng2-pdf-viewer-container {
-    height: auto !important;
-    overflow: auto;
-}
-
 .navIcon.videos {
     background: url(/assets/images/videos-light.svg);
 }
