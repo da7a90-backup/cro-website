@@ -1,29 +1,23 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core'
-import { MatDialog, MatDialogRef } from '@angular/material/dialog'
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { Router } from '@angular/router'
-import * as _ from 'lodash'
-import { AuthService } from '../../../auth/auth.service'
-import { LoadingDialogComponent } from '../../../controls/loading-dialog/loading-dialog.component'
-import { ChannelService } from '../../../services/channel.service'
-import { WaitingRoomDialogComponent } from '../../channel-details/channel/waiting-room-dialog/waiting-room-dialog.component'
+import { MatDialog, MatDialogRef } from '@angular/material/dialog'
+import { AuthService } from '../../../../auth/auth.service'
+import { ChannelService } from '../../../../services/channel.service'
+import { LoadingDialogComponent } from '../../../../controls/loading-dialog/loading-dialog.component'
+import { WaitingRoomDialogComponent } from '../../../channel-details/channel/waiting-room-dialog/waiting-room-dialog.component'
 
 @Component({
-    selector: 'app-carousel',
-    templateUrl: './carousel.component.html',
-    styleUrls: ['./carousel.component.scss']
+    selector: 'app-carousel-card',
+    templateUrl: './carousel-card.component.html',
+    styleUrls: ['./carousel-card.component.scss']
 })
-export class CarouselComponent {
-    @ViewChild('carouselContainer', { static: true })
-    carouselContainer: ElementRef
-
-    @ViewChild('carousel') carousel: ElementRef
-    @Input() animationDuration = 700
-    @Input() channels: any[]
-
-    public animating = false
-    public animateDirection: -1 | 0 | 1 = 0
-    
+export class CarouselCardComponent implements OnInit {
+    @Input() channelData: any
+    @Input() index: number
+    @Output() prev = new EventEmitter()
+    @Output() next = new EventEmitter()
+    @Input() activeChannel: boolean = false
     user: any = {}
     private dialogRefLoading: MatDialogRef<LoadingDialogComponent>
 
@@ -37,49 +31,8 @@ export class CarouselComponent {
 
     ngOnInit() {
         this.user = this.authService.currentUser
+        console.log(this.channelData)
     }
-    carouselStyle() {
-        const { matches: isMobile } = window.matchMedia('(max-width: 767px)')
-
-        return {
-            transform: this.animating
-                ? `translateX(calc(${this.animateDirection} * (${
-                      isMobile ? '65%' : '33% + 1.5rem'
-                  })))`
-                : 'translateX(0px)',
-            transition: this.animating ? `${this.animationDuration}ms` : 'none'
-        }
-    }
-    slideMove(index){
-        if(index==1){
-            this.prevSlide()
-        }else if(index==3){
-            this.nextSlide()
-        }
-    }
-    nextSlide() {
-        this.shiftSlide(-1)
-    }
-
-    prevSlide() {
-        this.shiftSlide(1)
-    }
-
-    shiftOne(arr, direction) {
-        direction > 0 ? arr.unshift(arr.pop()) : arr.push(arr.shift())
-    }
-
-    shiftSlide(direction) {
-        if (this.animating) return
-        this.animateDirection = direction
-        this.animating = true
-        setTimeout(() => {
-            this.shiftOne(this.channels, direction)
-            this.animating = false
-            this.animateDirection = 0
-        }, this.animationDuration)
-    }
- 
     mouseDown = false;
 
     startX: any;
@@ -88,10 +41,14 @@ export class CarouselComponent {
     startDragging(e, flag, el) {
         this.mouseDown = true;
         this.startX=e.pageX;
+        // this.startX = e.pageX - el.offsetLeft;
+        // this.scrollLeft = el.scrollLeft;
       }
       startDraggingTouch(e, flag, el) {
         this.mouseDown = true;
         this.startX=e.changedTouches[0].pageX;
+        // this.startX = e.changedTouches[0].pageX - el.offsetLeft;
+        // this.scrollLeft = el.scrollLeft;
       }
       
       stopDragging(e, flag) {
@@ -103,7 +60,15 @@ export class CarouselComponent {
         if (!this.mouseDown) {
           return;
         }
-         e.pageX>this.startX?this.prevSlide():this.nextSlide();
+         e.pageX>this.startX?this.prev.emit():this.next.emit();
+
+        // const x = e.pageX - el.offsetLeft;
+        // const scroll = x - this.startX;
+        //  this.scrollLeft - scroll<0?this.prev.emit():this.next.emit();
+        // // console.log(e,el.offsetLeft)
+        // el.scrollLeft = this.scrollLeft - scroll;
+
+        // console.log(this.scrollLeft-scroll<0?'prev'+scroll:'next'+scroll)
       }
 
       moveEventTouch(e, el) {
@@ -111,7 +76,11 @@ export class CarouselComponent {
         if (!this.mouseDown) {
           return;
         }
-        e.changedTouches[0].pageX>this.startX?this.prevSlide():this.nextSlide();
+        e.changedTouches[0].pageX>this.startX?this.prev.emit():this.next.emit();
+        // const x = e.changedTouches[0].pageX - el.offsetLeft;
+        // const scroll = x - this.startX;
+        //  this.scrollLeft - scroll<=0?this.prev.emit():this.next.emit();
+        // el.scrollLeft = this.scrollLeft - scroll;
       }
     getImagePath(techName) {
         return this.channelService.techList
@@ -120,11 +89,11 @@ export class CarouselComponent {
             .toString()
     }
 
-    async showDialogOrJoin(channelData) {
+    async showDialogOrJoin() {
         const channel = await this.channelService.getChannel({
-            channelId: channelData._id
-        }) 
-        channelData = channel
+            channelId: this.channelData._id
+        }) // get updated channel data
+        this.channelData = channel
         if (channel) {
             const isUserBlocked = await channel.blockedUsers?.some(
                 (blockedUser) => blockedUser === this.user._id
@@ -139,7 +108,7 @@ export class CarouselComponent {
                     channel.user != this.user._id &&
                     !channel?.notificationSubscribers?.includes(this.user._id)
                 ) {
-                    this.showWaitingRoomDialog(channelData)
+                    this.showWaitingRoomDialog()
                 } else {
                     this.showLoadingDialog()
                     this.router.navigate(['/channel', channel._id])
@@ -153,11 +122,11 @@ export class CarouselComponent {
         }
     }
 
-    showWaitingRoomDialog(channelData) {
+    showWaitingRoomDialog() {
         this.dialog.open(WaitingRoomDialogComponent, {
             width: '400px',
             data: {
-                channel: channelData
+                channel: this.channelData
             },
             autoFocus: false
         })
@@ -175,7 +144,4 @@ export class CarouselComponent {
     closeLoadingDialog() {
         this.dialogRefLoading.close()
     }
-
-
-
 }
