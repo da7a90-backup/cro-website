@@ -3378,11 +3378,6 @@ mat-ink-bar.mat-ink-bar {
     background: #fafbfc;
 }
 
-:host .ng2-pdf-viewer-container {
-    height: auto !important;
-    overflow: auto;
-}
-
 /* Pricing page css  */
 .pricingBox.priceLight {
     background: #ffffff;
