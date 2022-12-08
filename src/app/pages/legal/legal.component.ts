@@ -1,14 +1,6 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    Inject,
-    OnInit,
-    PLATFORM_ID,
-    ViewChild
-} from '@angular/core'
-import { NavigationEnd, Router } from '@angular/router'
-import { isPlatformServer } from '@angular/common'
+import { Component, OnInit } from '@angular/core'
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
+import { Router } from '@angular/router'
 import { SharedService } from '../../services/shared.service'
 
 @Component({
@@ -16,54 +8,50 @@ import { SharedService } from '../../services/shared.service'
     templateUrl: './legal.component.html',
     styleUrls: ['./legal.component.scss']
 })
-export class LegalComponent implements OnInit, AfterViewInit {
-    isServer = isPlatformServer(this.platformId)
-    @ViewChild('.ng2-pdf-viewer-container') divView: ElementRef
+export class LegalComponent implements OnInit {
     public navLinks: any
+    public currentUrl: SafeResourceUrl
 
     constructor(
-        @Inject(PLATFORM_ID) private platformId: Object,
         private sharedService: SharedService,
-        private elRef: ElementRef,
-        router: Router
-    ) {
-        router.events.forEach((event) => {
-            if (event instanceof NavigationEnd) {
-                this.elRef.nativeElement
-                    .querySelector('.ng2-pdf-viewer-container')
-                    ?.setAttribute('style', 'height: auto')
-            }
-        })
-    }
+        private sanitizer: DomSanitizer,
+        private router: Router
+    ) {}
 
     async ngOnInit() {
         this.sharedService.isLoginPage = false
         this.navLinks = [
             {
                 label: 'Privacy Policy',
-                path: 'privacy-policy'
+                path: 'privacy-policy',
+                url: 'https://code-crow-legal-docs.s3.amazonaws.com/legal/privacy.pdf'
             },
             {
                 label: 'Cookie Policy',
-                path: 'cookie-policy'
+                path: 'cookie-policy',
+                url: 'https://code-crow-legal-docs.s3.amazonaws.com/legal/cookie.pdf'
             },
             {
                 label: 'Copyright Policy',
-                path: 'copyright-policy'
+                path: 'copyright-policy',
+                url: 'https://code-crow-legal-docs.s3.amazonaws.com/legal/copyright.pdf'
             },
             {
                 label: 'GDPR Policy',
-                path: 'gdpr-policy'
+                path: 'gdpr-policy',
+                url: 'https://code-crow-legal-docs.s3.amazonaws.com/legal/gdpr.pdf'
             },
             {
                 label: 'Terms of Service',
-                path: 'terms-of-service'
+                path: 'terms-of-service',
+                url: 'https://code-crow-legal-docs.s3.amazonaws.com/legal/terms.pdf'
             }
         ]
+        this.updatePdf(this.navLinks[0])
     }
 
-    ngAfterViewInit() {
-        const pdfContainer = this.elRef.nativeElement.querySelector('.ng2-pdf-viewer-container')
-        if (pdfContainer) pdfContainer.setAttribute('style', 'height: auto')
+    updatePdf(link) {
+        this.router.navigate(['/legal', link.path])
+        this.currentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(link.url)
     }
 }
