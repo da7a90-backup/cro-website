@@ -1,20 +1,16 @@
 <ng-container>
-	<div class="app-container custom-scroll">
-		<div class="tab-links">
-			<div class="container">
-				<nav mat-tab-nav-bar>
-					<a
-						mat-tab-link
-						*ngFor="let link of navLinks"
-						[routerLink]="link.path"
-						routerLinkActive
-						#rla="routerLinkActive"
-						[active]="rla.isActive">
-						{{ link.label }}
-					</a>
-				</nav>
-			</div>
-		</div>
-		<router-outlet></router-outlet>
-	</div>
+    <div class="app-container custom-scroll">
+        <div class="tab-links">
+            <div class="container">
+                <nav mat-tab-nav-bar>
+                    <a mat-tab-link *ngFor="let link of navLinks" (click)="updatePdf(link)">
+                        {{ link.label }}
+                    </a>
+                </nav>
+                <div class="container mt-3 mb-3">
+                    <iframe [src]="currentUrl"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 </ng-container>
