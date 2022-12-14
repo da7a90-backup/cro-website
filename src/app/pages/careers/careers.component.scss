@@ -1,0 +1,31 @@
+.app-careers {
+    background-color: #25252a;
+    height: 100vh;
+}
+
+.app-careers-container {
+    height: 100%;
+    width: 70%;
+    top: 25%;
+    left: 15%;
+    position: relative;
+}
+
+.app-careers-icon {
+    font-size: 50px;
+    height: 100px;
+    width: 100px;
+    vertical-align: middle;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: 30px;
+}
+
+.app-careers-message {
+    text-align: center;
+    font-size: x-large;
+    font-weight: 300 !important;
+    margin-bottom: 0 !important;
+    color: white;
+}

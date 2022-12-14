@@ -3135,8 +3135,8 @@ a {
     background: url(/assets/images/information-dark.svg);
 }
 
-.navIcon.legel {
-    background: url(/assets/images/legel-dark.svg);
+.navIcon.legal {
+    background: url(/assets/images/legal-dark.svg);
 }
 
 .navIcon.contact {
@@ -3173,6 +3173,10 @@ a {
 
 .navIcon.mute-notifications {
     background: url(/assets/images/mute-notifications-light.svg);
+}
+
+.navIcon.careers {
+    background: url(/assets/images/careers-light.svg);
 }
 
 .social-icons .twitter {
@@ -4290,11 +4294,12 @@ table .tip_ tr td {
 }
 
 
-.hide-profile-edit-icon{
+.hide-profile-edit-icon {
     /* display: none; */
     visibility: hidden;
 }
-.show-profile-edit-icon{
+
+.show-profile-edit-icon {
     /* display: block; */
     visibility: visible;
 }

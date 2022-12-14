@@ -189,6 +189,7 @@ export class StreamingService {
                     this.channelMembersCount = await this.getChannelMembersCount({
                         channelId: this.channelService.currentChannel._id
                     })
+                    console.log("this.channelMembersCount", this.channelMembersCount)
                     this.channelService.currentChannel.memberCount = this.channelMembersCount
                 }
             })
@@ -206,7 +207,9 @@ export class StreamingService {
                 switch (messageData.type) {
                     case 'toggleTrack':
                         if (messageData.trackType === 'obs') { member.obsState === 'live' ? this.attachTrack(member.obsStream, data.userData.id, 'obs') : this.detachTrack(member.id, 'obs') }
-                        if (messageData.trackType === 'screen' && this.userData.id !== member.id) { member.screenState === 'live' ? this.attachTrack(member.screenStream, member.id, 'screen') : this.detachTrack(member.id, 'screen') }
+                        if (messageData.trackType === 'screen' && this.userData.id !== member.id) {
+                            member.screenState === 'live' ? this.attachTrack(member.screenStream, member.id, 'screen') : this.detachTrack(member.id, 'screen')
+                        }
                         if (messageData.trackType === 'webcam' && this.userData.id !== member.id) { member.webcamState === 'live' ? this.attachTrack(member.webcamStream, member.id, 'webcam') : this.detachTrack(member.id, 'webcam') }
                         if (messageData.trackType === 'audio' && this.userData.id !== member.id) { member.audioState === 'live' ? this.attachTrack(member.audioStream, member.id, 'audio') : this.detachTrack(member.id, 'audio') }
                         break;
@@ -462,7 +465,7 @@ export class StreamingService {
 
     detachTrack(memberId, trackType) {
         const videoElement = document.getElementById(`${trackType}-${memberId}`)
-        videoElement.remove()
+        videoElement?.remove()
     }
 
     async stopScreenStream(state = 'hibernate') {
