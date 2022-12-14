@@ -28,6 +28,17 @@
                 (change)="onChangeWeb()">
                 Web Push Notifications</mat-slide-toggle>
             </div> -->
+
+                        <h6>Theming</h6>
+
+                        <div (click)="$event.stopPropagation()">
+                            <mat-slide-toggle [checked]="isDarkTheme" (change)="onModeChange()"></mat-slide-toggle>
+                            <span class="material-icons">dark_mode</span>
+                            <span>Enable dark mode</span>
+                        </div>
+
+                        <h6>1v1 chat</h6>
+
                         <div>
                             <mat-slide-toggle formControlName="isDoNotDisturbEnabled" [checked]="isDoNotDisturbEnabled"
                                 (change)="onChangeDoNotDisturb()">
@@ -47,11 +58,11 @@
                                 (change)="onChangeIsMutedAll()">
                                 Mute all sfx</mat-slide-toggle>
                         </div>
-                        <div>
+                        <!-- <div>
                             <mat-slide-toggle formControlName="isMutedAskedToSpeak" [checked]="isMutedAskedToSpeak"
                                 (change)="onChangeIsMutedAskedToSpeak()">
                                 Mute asked to speak sfx</mat-slide-toggle>
-                        </div>
+                        </div> -->
                         <div>
                             <mat-slide-toggle formControlName="isMutedChannelUpdates" [checked]="isMutedChannelUpdates"
                                 (change)="onChangeIsMutedChannelUpdates()">
@@ -63,23 +74,23 @@
                                 (change)="onChangeIsMutedFriendRequestReceived()">
                                 Mute friend request received sfx</mat-slide-toggle>
                         </div>
-                        <div>
+                        <!-- <div>
                             <mat-slide-toggle formControlName="isMutedMicMutedAndUnmuted"
                                 [checked]="isMutedMicMutedAndUnmuted" (change)="onChangeIsMutedMicMutedAndUnmuted()">
                                 Mute mic muted and unmuted sfx</mat-slide-toggle>
-                        </div>
+                        </div> -->
                         <div>
                             <mat-slide-toggle formControlName="isMutedSentAndReceivedMessage"
                                 [checked]="isMutedSentAndReceivedMessage"
                                 (change)="onChangeIsMutedSentAndReceivedMessage()">
                                 Mute sent and received message sfx</mat-slide-toggle>
                         </div>
-                        <div>
+                        <!-- <div>
                             <mat-slide-toggle formControlName="isMutedStartedAndStoppedSharingScreen"
                                 [checked]="isMutedStartedAndStoppedSharingScreen"
                                 (change)="onChangeIsMutedStartedAndStoppedSharingScreen()">
                                 Mute started and stopped sharing screen sfx</mat-slide-toggle>
-                        </div>
+                        </div> -->
                         <!-- <div>
               <mat-slide-toggle formControlName="isMutedUserJoinedAndLeftChannel"
                 [checked]="isMutedUserJoinedAndLeftChannel" (change)="onChangeIsMutedUserJoinedAndLeftChannel()">

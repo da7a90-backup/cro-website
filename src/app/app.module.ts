@@ -65,7 +65,7 @@ import { CommunityDialogComponent } from './pages/community-dialog/community-dia
 import { CommunityComponent } from './pages/community-dialog/community/community.component'
 import { AngularFireModule } from '@angular/fire/compat'
 import { AngularFireRemoteConfigModule, SETTINGS } from '@angular/fire/compat/remote-config'
-import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/compat/analytics'
+import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/compat/analytics';
 
 export function playerFactory() {
     return player
@@ -102,7 +102,7 @@ export function playerFactory() {
         TechStackDropdownComponent,
         InAppSnackBarComponent,
         CommunityDialogComponent,
-        CommunityComponent
+        CommunityComponent,
     ],
     imports: [
         BrowserModule,
