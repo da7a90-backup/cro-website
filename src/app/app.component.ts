@@ -15,7 +15,7 @@ import { SfxService } from './services/sfx.service'
 import { StreamingService } from './services/streaming.service'
 import { AnimationOptions } from 'ngx-lottie'
 import { ThemeService } from './services/theme.service'
-import { FirebaseService } from './services/firebase.service'
+import { RemoteConfigService } from './services/remoteConfig.service'
 import { StyleManagerService } from './style-manager.service'
 
 @Component({
@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
         private sfxService: SfxService,
         private streamingService: StreamingService,
         private themeService: ThemeService,
-        private firebaseService: FirebaseService,
+        private remoteConfigService: RemoteConfigService,
         private styleManager: StyleManagerService,
     ) {
         this.router.events.subscribe((event) => {
@@ -73,8 +73,6 @@ export class AppComponent implements OnInit {
             this.addMetaTags()
             this.isAuthenticated = await this.tokenStorage.getAuthenticatedStatus()
             this.showSideBar = this.isAuthenticated
-            this.firebaseService.setUserPropertyAnalytics()
-            this.firebaseService.getAllRemoteConfigValues()
             this.router.events.subscribe(async (event) => {
                 if (!(event instanceof NavigationEnd)) {
                     return
@@ -111,13 +109,14 @@ export class AppComponent implements OnInit {
     private async onInitsubMethod() {
         try {
             this.user = await this.authService.me()
+            await this.remoteConfigService.getRemoteConfigs()
             await this.channelService.getTechList()
             await this.sfxService.getAllSavedMutedSfx()
             const onConnectionSuccess = async () => {
                 if (this.user) {
                     this.sharedService.isLoginPage = false
                     await this.socket.emitUserConnection(this.user._id, true)
-                    if (this.firebaseService.isMaintenanceModeEnabled && !this.user.isAdmin) {
+                    if (this.remoteConfigService.isMaintenanceModeEnabled && !this.user.isAdmin) {
                         this.router.navigate(['/maintenance'])
                     }
 

@@ -73,12 +73,12 @@
                 </span>
                 <div class="separator"></div>
                 <span [matTooltip]="'Tip channel host'"
-                    *ngIf="host && host.walletAddress && firebaseService.isFeaturePremiumPageEnabled"><img
+                    *ngIf="host && host.walletAddress && remoteConfigService.isFeaturePremiumPageEnabled"><img
                         class="cursor-pointer spacing-right" src="/assets/images/recursion-tip.svg"
                         (click)="showTokenDialog()" />
                     {{ channelService.currentChannel.tips || '0' }}</span>
                 <div class="separator"
-                    *ngIf="host && host.walletAddress && firebaseService.isFeaturePremiumPageEnabled"></div>
+                    *ngIf="host && host.walletAddress && remoteConfigService.isFeaturePremiumPageEnabled"></div>
                 <span class="social-icons" (click)="tweetLiveStream()" [matTooltip]="'Tweet'"><i
                         class="twitter"></i></span>
                 <div class="separator mobile-only"></div>
