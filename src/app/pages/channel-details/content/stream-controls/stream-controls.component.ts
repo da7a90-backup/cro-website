@@ -11,7 +11,7 @@ import { environment } from '../../../../../environments/environment'
 import { BnNgIdleService } from 'bn-ng-idle'
 import { ChannelSettingsComponent } from '../../channel/channel-settings/channel-settings.component'
 import { TokenControlsComponent } from './stream-token-control/stream-token-controls.component'
-import { FirebaseService } from '../../../../services/firebase.service'
+import { RemoteConfigService } from '../../../../services/remoteConfig.service'
 
 @Component({
     selector: 'app-stream-controls',
@@ -32,7 +32,7 @@ export class StreamControlsComponent implements OnInit, OnDestroy {
         public userService: UserService,
         private dialogService: DialogService,
         private bnIdle: BnNgIdleService,
-        public firebaseService: FirebaseService
+        public remoteConfigService: RemoteConfigService
     ) {}
 
     async ngOnInit() {

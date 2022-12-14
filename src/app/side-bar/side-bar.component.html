@@ -26,43 +26,43 @@
             </a>
             <div class="border-bottom" *ngIf="authService.currentUser"></div>
 
-            <a class="nav-link-wrapper" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled"
+            <a class="nav-link-wrapper" *ngIf="authService.currentUser && !remoteConfigService.isMaintenanceModeEnabled"
                 (click)="showUsersDialog()">
                 <span class="navIcon community"></span>
                 <div>Community</div>
                 <span class="navIcon chevron-right"></span>
             </a>
-            <div class="border-bottom" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled">
+            <div class="border-bottom" *ngIf="authService.currentUser && !remoteConfigService.isMaintenanceModeEnabled">
             </div>
 
-            <a class="nav-link-wrapper" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled"
+            <a class="nav-link-wrapper" *ngIf="authService.currentUser && !remoteConfigService.isMaintenanceModeEnabled"
                 (click)="showChatsDialog()">
                 <span class="navIcon friends-chat"></span>
                 <div>Messages</div>
                 <span class="navIcon chevron-right"></span>
             </a>
-            <div class="border-bottom" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled">
+            <div class="border-bottom" *ngIf="authService.currentUser && !remoteConfigService.isMaintenanceModeEnabled">
             </div>
 
             <a class="nav-link-wrapper mint"
-                *ngIf="firebaseService.isFeatureMintPageEnabled && !firebaseService.isMaintenanceModeEnabled"
+                *ngIf="remoteConfigService.isFeatureMintPageEnabled && !remoteConfigService.isMaintenanceModeEnabled"
                 target="_blank" rel="noreferrer" href="https://mint.codecrow.io">
                 <span class="navIcon mint"></span>
                 <div>Mint</div>
             </a>
             <div class="border-bottom"
-                *ngIf="firebaseService.isFeatureMintPageEnabled && !firebaseService.isMaintenanceModeEnabled">
+                *ngIf="remoteConfigService.isFeatureMintPageEnabled && !remoteConfigService.isMaintenanceModeEnabled">
             </div>
 
             <a class="nav-link-wrapper access-keys"
-                *ngIf="authService.currentUser && firebaseService.isFeaturePremiumPageEnabled && !firebaseService.isMaintenanceModeEnabled"
+                *ngIf="authService.currentUser && remoteConfigService.isFeaturePremiumPageEnabled && !remoteConfigService.isMaintenanceModeEnabled"
                 routerLink="/premium">
                 <span class="navIcon nft"></span>
                 <div>Premium</div>
                 <span class="navIcon new-feature"></span>
             </a>
             <div class="border-bottom"
-                *ngIf="authService.currentUser && firebaseService.isFeaturePremiumPageEnabled && !firebaseService.isMaintenanceModeEnabled">
+                *ngIf="authService.currentUser && remoteConfigService.isFeaturePremiumPageEnabled && !remoteConfigService.isMaintenanceModeEnabled">
             </div>
 
             <!-- <a class="nav-link-wrapper" routerLink="/videos">
@@ -101,12 +101,12 @@
 
             <div class="border-bottom"></div>
 
-            <a class="nav-link-wrapper" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled"
+            <a class="nav-link-wrapper" *ngIf="authService.currentUser && !remoteConfigService.isMaintenanceModeEnabled"
                 routerLink="/settings">
                 <span class="navIcon account-settings"></span>
                 <div>Settings</div>
             </a>
-            <div class="border-bottom" *ngIf="authService.currentUser && !firebaseService.isMaintenanceModeEnabled">
+            <div class="border-bottom" *ngIf="authService.currentUser && !remoteConfigService.isMaintenanceModeEnabled">
             </div>
 
             <a class="nav-link-wrapper" *ngIf="authService.currentUser" (click)="showLogoutDialog()">
