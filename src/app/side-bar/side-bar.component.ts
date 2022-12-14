@@ -52,7 +52,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this.getVersion()
-        this.isDarkTheme = await this.themeService.isDarkTheme
+        this.isDarkTheme = this.themeService.isDarkTheme
         this.animationOptsSubscription = this.themeService.logoAnimationOpts.subscribe(
             async (opts) => {
                 if (opts) {
@@ -65,12 +65,6 @@ export class SideBarComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         if (this.animationOptsSubscription) this.animationOptsSubscription.unsubscribe()
-    }
-
-    async onModeChange() {
-        this.isDarkTheme = !this.isDarkTheme
-        const themeToSet = this.isDarkTheme ? 'theme-dark' : 'theme-light'
-        await this.themeService.setTheme(themeToSet)
     }
 
     async showLogoutDialog() {

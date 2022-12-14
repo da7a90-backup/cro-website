@@ -6,11 +6,11 @@ import { Component, OnInit } from '@angular/core'
     styleUrls: ['./maintenance.component.scss']
 })
 export class MaintenanceComponent implements OnInit {
-    public maintenanceMessage: string
+    public message: string
 
     constructor() {}
 
     async ngOnInit() {
-        this.maintenanceMessage = 'We are performing maintenance on the app. We will be back up shortly. We appreciate your patience!'
+        this.message = 'We are performing maintenance on the app. We will be back up shortly. We appreciate your patience!'
     }
 }

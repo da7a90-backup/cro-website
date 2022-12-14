@@ -344,10 +344,9 @@ export class Socket {
     listenToRoomMemberUpdate({ channelId }): Observable<any> {
         return new Observable((observer) => {
             this.channelSocket.addEventListener(`message`, (data) => {
-                if (
-                    JSON.parse(data.data).eventName === `channel-streaming-room-member-update-${channelId}`
-                ) {
-                    observer.next(JSON.parse(data.data))
+                const parsedData = JSON.parse(data.data)
+                if (parsedData.eventName === `channel-streaming-room-member-update-${channelId}`) {
+                    observer.next(parsedData)
                 }
             })
         })
@@ -367,11 +366,10 @@ export class Socket {
     listenToUserActions({ channelId }): Observable<any> {
         return new Observable((observer) => {
             this.channelSocket.addEventListener(`message`, (data) => {
-                if (
-                    JSON.parse(data.data).eventName === `channel-streaming-user-actions` &&
-                    JSON.parse(data.data).userData.channel === channelId
-                ) {
-                    observer.next(JSON.parse(data.data))
+                const parsedData = JSON.parse(data.data)
+                console.log("parsedData", parsedData)
+                if (parsedData.eventName === `channel-streaming-user-actions-${channelId}`) {
+                    observer.next(parsedData)
                 }
             })
         })

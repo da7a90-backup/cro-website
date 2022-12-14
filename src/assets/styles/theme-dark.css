@@ -3306,8 +3306,8 @@ mat-ink-bar.mat-ink-bar {
     background: url(/assets/images/information-light.svg);
 }
 
-.navIcon.legel {
-    background: url(/assets/images/legel-light.svg);
+.navIcon.legal {
+    background: url(/assets/images/legal-light.svg);
 }
 
 .navIcon.contact {
@@ -3344,6 +3344,10 @@ mat-ink-bar.mat-ink-bar {
 
 .navIcon.mute-notifications {
     background: url(/assets/images/mute-notifications-dark.svg);
+}
+
+.navIcon.careers {
+    background: url(/assets/images/careers-dark.svg);
 }
 
 .social-icons .facebook {

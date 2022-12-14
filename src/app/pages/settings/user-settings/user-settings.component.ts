@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { UserService } from '../../../services/user.service'
 import { SfxService, SoundEffect } from '../../../services/sfx.service'
 import { AuthService } from '../../../auth/auth.service'
+import { ThemeService } from '../../../services/theme.service'
 
 @Component({
     selector: 'app-user-settings',
@@ -26,13 +27,15 @@ export class UserSettingsComponent implements AfterViewInit {
     public isMutedSentAndReceivedMessage: boolean = false
     public isMutedStartedAndStoppedSharingScreen: boolean = false
     public isMutedUserJoinedAndLeftChannel: boolean = false
+    public isDarkTheme: boolean = false
 
     constructor(
         private formbuilder: FormBuilder,
         private userService: UserService,
         private fb: FormBuilder,
         private sfxService: SfxService,
-        private authService: AuthService
+        private authService: AuthService,
+        public themeService: ThemeService
     ) {
         this.notificationForm = this.formbuilder.group({
             // isEmailNotificationsEnabled: [false],
@@ -63,6 +66,13 @@ export class UserSettingsComponent implements AfterViewInit {
         this.settingsForm.get('email').setValue(this.email)
         await this.sfxService.getAllSavedMutedSfx()
         this.isMutedAll = this.sfxService.sfxList.find((sfx) => sfx.key == SoundEffect.All).isMuted
+        this.isDarkTheme = this.themeService.isDarkTheme
+    }
+
+    async onModeChange() {
+        this.isDarkTheme = !this.isDarkTheme
+        const themeToSet = this.isDarkTheme ? 'theme-dark' : 'theme-light'
+        await this.themeService.setTheme(themeToSet)
     }
 
     // async onChangeEmail() {
