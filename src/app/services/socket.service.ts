@@ -266,6 +266,19 @@ export class Socket {
 
     /************ Channel chat ****************/
 
+    // listenToChannel(channelId): Observable<any> {
+    //     return new Observable((observer) => {
+    //         this.channelSocket.addEventListener(`message`, (data) => {
+    //             const parsedData = JSON.parse(data.data)
+    //             switch (parsedData.eventName) {
+    //                 case `channel-message-${channelId}`:
+    //                     observer.next(JSON.parse(parsedData))
+    //                     break
+    //             }
+    //         })
+    //     })
+    // }
+
     listenToChannelMessage(channelId): Observable<any> {
         return new Observable((observer) => {
             this.channelSocket.addEventListener(`message`, (data) => {
@@ -346,6 +359,7 @@ export class Socket {
             this.channelSocket.addEventListener(`message`, (data) => {
                 const parsedData = JSON.parse(data.data)
                 if (parsedData.eventName === `channel-streaming-room-member-update-${channelId}`) {
+                    console.log("parsedData", parsedData)
                     observer.next(parsedData)
                 }
             })
@@ -367,8 +381,8 @@ export class Socket {
         return new Observable((observer) => {
             this.channelSocket.addEventListener(`message`, (data) => {
                 const parsedData = JSON.parse(data.data)
-                console.log("parsedData", parsedData)
                 if (parsedData.eventName === `channel-streaming-user-actions-${channelId}`) {
+                    console.log("parsedData", parsedData)
                     observer.next(parsedData)
                 }
             })

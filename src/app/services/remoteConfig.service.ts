@@ -24,7 +24,6 @@ export class RemoteConfigService {
     async getRemoteConfigs() {
         const remoteCongigs: any = await lastValueFrom(this.http.get(`${environment.apiUrl}/remote-configs`))
         remoteCongigs.map(config => {
-            console.log("config", config)
             this.isMaintenanceModeEnabled = config.flagKey === 'maintenance-mode' ? config.flagValue : false
             this.isFeatureVideoResponsesEnabled = config.flagKey === 'feature-video-responses' ? config.flagValue : false
             this.isFeatureGroupChatEnabled = config.flagKey === 'feature-group-chat' ? config.flagValue : false
