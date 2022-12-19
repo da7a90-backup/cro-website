@@ -94,7 +94,7 @@ export class AppComponent implements OnInit {
                     return
                 }
             })
-            if (this.isAuthenticated) {
+            if (this.isAuthenticated && this.router.url !== '/') {
                 this.isLoading = false
                 await this.onInitsubMethod()
             }

@@ -22,14 +22,15 @@ export class RemoteConfigService {
     }
 
     async getRemoteConfigs() {
-        const remoteCongigs: any = await lastValueFrom(this.http.get(`${environment.apiUrl}/remote-configs`))
-        remoteCongigs.map(config => {
-            this.isMaintenanceModeEnabled = config.flagKey === 'maintenance-mode' ? config.flagValue : false
-            this.isFeatureVideoResponsesEnabled = config.flagKey === 'feature-video-responses' ? config.flagValue : false
-            this.isFeatureGroupChatEnabled = config.flagKey === 'feature-group-chat' ? config.flagValue : false
-            this.isFeatureMintPageEnabled = config.flagKey === 'feature-mint-page' ? config.flagValue : false
-            this.isFeaturePremiumPageEnabled = config.flagKey === 'feature-premium-page' ? config.flagValue : false
+        const remoteConfigs: any = await lastValueFrom(this.http.get(`${environment.apiUrl}/remote-configs`))
+        remoteConfigs.map(config => {
+            if (config.flagKey === 'maintenance-mode') this.isMaintenanceModeEnabled = config.flagValue
+            if (config.flagKey === 'feature-video-responses') this.isFeatureVideoResponsesEnabled = config.flagValue
+            if (config.flagKey === 'feature-group-chat') this.isFeatureGroupChatEnabled = config.flagValue
+            if (config.flagKey === 'feature-mint-page') this.isFeatureMintPageEnabled = config.flagValue
+            if (config.flagKey === 'feature-premium-page') this.isFeaturePremiumPageEnabled = config.flagValue
         })
+        console.log('remoteConfigs', remoteConfigs)
     }
 
     async getRemoteConfigByKey({ flagKey }): Promise<any> {
