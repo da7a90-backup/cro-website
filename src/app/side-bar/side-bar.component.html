@@ -54,7 +54,7 @@
                 *ngIf="remoteConfigService.isFeatureMintPageEnabled && !remoteConfigService.isMaintenanceModeEnabled">
             </div>
 
-            <a class="nav-link-wrapper access-keys"
+            <a class="nav-link-wrapper premium"
                 *ngIf="authService.currentUser && remoteConfigService.isFeaturePremiumPageEnabled && !remoteConfigService.isMaintenanceModeEnabled"
                 routerLink="/premium">
                 <span class="navIcon nft"></span>
